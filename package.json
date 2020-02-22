@@ -4,7 +4,8 @@
   "description": "## What is Latch? LATCH is a social Web platform aimed towards people who are in the pursuit or already pursuing a career in any STEM field.The application will allow users to document various types of information about themselves such as experience, past projects, major, qualifications…etc. Also the application will allow users to interact with other users by sending in their profile, these ‘other profiles could be companies who have joined the site who have posted any listings on the request board. And the site will have discussion threads for anyone who is seeking answers to questions other users may have the answer to or if anyone wants to  chat.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server",
+    "server": "nodemon server"
   },
   "repository": {
     "type": "git",
