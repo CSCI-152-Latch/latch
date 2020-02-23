@@ -10,7 +10,7 @@ const User = require('../../models/User');
 //      public (no token needed)
 router.get("/", auth, async (req, res) => {
     try {
-        const profile = await (await Profile.findOne({user: req.user.id})).populated(
+        const profile = await Profile.findOne({user: req.user.id}).populated(
             'user',
             ['name', 'avatar']
         );
