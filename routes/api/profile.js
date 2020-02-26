@@ -10,19 +10,20 @@ const User = require('../../models/User');
 //      public (no token needed)
 router.get("/", auth, async (req, res) => {
     try {
-        const profile = await Profile.findOne({user: req.user.id}).populated(
+        const profile = await Profile.findOne({user: req.user.id}).populate(
             'user',
             ['name', 'avatar']
         );
-
+        
         if (!profile) {
-            return res.send('Invalid profile');
+            return res.status(400).json({msg: 'There is no profile for this user'});
         }
 
         res.send(profile);
     }
     catch (err) {
-        res.status(500).send('Invalid stuff');
+        console.log(err)
+        res.status(500).send('Server Error');
     }
 });
 
