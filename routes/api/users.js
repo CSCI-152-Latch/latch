@@ -8,14 +8,16 @@ const { check, validationResult } = require("express-validator"); // better unde
 const User = require("../../models/User"); //importing teh user model
 //express-validator helps making sure that the fileds are filled correctly
 
-
 //Post   api/users
 //      register
 //      public (no token needed)
 router.post(
   "/",
   [
-    check("name", "Name is required")
+    check("firstName", "Name is required")
+      .not()
+      .isEmpty(),
+      check("lastName", "Name is required")
       .not()
       .isEmpty(),
     check("email", "Make sure email is valid").isEmail(),
@@ -29,7 +31,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() }); //bad request
     } //for simplicity sake, we will deconstruct the req.body for the payload information
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     //making a new query using findone()
     try {
@@ -44,11 +46,12 @@ router.post(
       const avatar = gravatar.url(email, {
         s: "200",
         r: "pg",
-        d: "mm"
+        d: "retro"
       });
       //this doesnt actually save the user it just creates an instance of the user
       user = new User({
-        name,
+        firstName,
+        lastName,
         email,
         avatar,
         password
@@ -86,7 +89,5 @@ router.post(
     }
   }
 );
-
-
 
 module.exports = router;
