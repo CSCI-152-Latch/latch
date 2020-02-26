@@ -39,10 +39,6 @@ const ProfileSchema = mongoose.Schema({
     },
     field: {           //The fields or subjects they are in 
         type: [String]
-    },
-    date: {             //When they created thier profile
-        type: Date, 
-        default: Date.now
     }
 });
 
