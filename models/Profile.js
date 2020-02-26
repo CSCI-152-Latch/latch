@@ -11,31 +11,31 @@ const ProfileSchema = mongoose.Schema({
         required: true
     },
     bio: {              //About them
-        type: String
+        type: String,
+        default: ''
     },
-    experience: {       //Thier experience
+    experience: {       //Their experience
         title: {
             type: String,
-            required: true
+            // required: true
         },
         company: {
             type: String,
-            required: true
+            // required: true
         },
         from: {
             type: Date,
-            required: true
+            // required: true
         },
         to: {
             type: Date
         },
         current: {
             type: Boolean,
-            default: false
         },
         decription: {
             type: String
-        }
+        },
     },
     field: {           //The fields or subjects they are in 
         type: [String]

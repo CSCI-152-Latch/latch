@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require('../../middleware/auth');
+// const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
@@ -8,11 +9,11 @@ const User = require('../../models/User');
 //Get   api/profile
 //      test route
 //      public (no token needed)
-router.get("/", auth, async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({user: req.user.id}).populate(
             'user',
-            ['name', 'avatar']
+            ['firstName', 'lastName', 'email', 'avatar']
         );
         
         if (!profile) {
@@ -22,9 +23,28 @@ router.get("/", auth, async (req, res) => {
         res.send(profile);
     }
     catch (err) {
-        console.log(err)
+        console.log(err);
         res.status(500).send('Server Error');
     }
 });
+
+router.post('/', auth, async (req, res) => {
+    try {
+        const { user, status, bio, experience, field} = req.body;
+        const profile = new Profile({
+            user,
+            status,
+            bio,
+            experience,
+            field
+        });
+        await profile.save();
+        res.send(profile);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+})
 
 module.exports = router;
