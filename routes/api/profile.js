@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const auth = require('../../middleware/auth');
-// const { check, validationResult } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
-//Get   api/profile
-//      test route
-//      public (no token needed)
+// Type:         GET
+// Where:        api/profile
+// Purpose:      Getting user profile data
+// Access:       Private
 router.get('/', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({user: req.user.id}).populate(
@@ -28,23 +29,41 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-router.post('/', auth, async (req, res) => {
-    try {
-        const { user, status, bio, experience, field} = req.body;
-        const profile = new Profile({
-            user,
-            status,
-            bio,
-            experience,
-            field
-        });
-        await profile.save();
-        res.send(profile);
+// Type:         POST
+// Where:        api/profile
+// Purpose:      Creating a new profile
+// Access:       Private
+router.post(
+    '/', 
+    auth, 
+    [
+        check('user').notEmpty(),
+        check('status').notEmpty()
+    ],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ error: errors.array() });
+            }
+
+            const { user, status, bio, experience, field} = req.body;
+            const profile = new Profile({
+                user,
+                status,
+                bio,
+                experience,
+                field
+            });
+
+            await profile.save();
+            res.send(profile);
+        }
+        catch (err) {
+            console.log(err);
+            res.status(500).send(err);
+        }
     }
-    catch (err) {
-        console.log(err);
-        res.status(500).send(err);
-    }
-})
+);
 
 module.exports = router;

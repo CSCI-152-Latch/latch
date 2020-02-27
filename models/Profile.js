@@ -4,11 +4,9 @@ const ProfileSchema = mongoose.Schema({
     user: {             //User ID
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
-        required: true
     },
     status: {           //Job position              
-        type: String,
-        required: true
+        type: String
     },
     bio: {              //About them
         type: String,
@@ -16,29 +14,27 @@ const ProfileSchema = mongoose.Schema({
     },
     experience: {       //Their experience
         title: {
-            type: String,
-            // required: true
+            type: String
         },
         company: {
-            type: String,
-            // required: true
+            type: String
         },
         from: {
-            type: Date,
-            // required: true
+            type: Date
         },
         to: {
             type: Date
         },
         current: {
-            type: Boolean,
+            type: Boolean
         },
         decription: {
             type: String
         },
     },
     field: {           //The fields or subjects they are in 
-        type: [String]
+        type: [String],
+        default: []
     }
 });
 
