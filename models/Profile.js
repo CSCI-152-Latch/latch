@@ -12,26 +12,28 @@ const ProfileSchema = mongoose.Schema({
         type: String,
         default: ''
     },
-    experience: {       //Their experience
-        title: {
-            type: String
-        },
-        company: {
-            type: String
-        },
-        from: {
-            type: Date
-        },
-        to: {
-            type: Date
-        },
-        current: {
-            type: Boolean
-        },
-        decription: {
-            type: String
-        },
-    },
+    experience: [       //Their experience
+        {       
+            title: {
+                type: String
+            },
+            company: {
+                type: String
+            },
+            from: {
+                type: Date
+            },
+            to: {
+                type: Date
+            },
+            current: {
+                type: Boolean
+            },
+            decription: {
+                type: String
+            },
+        }
+    ],
     field: {           //The fields or subjects they are in 
         type: [String],
         default: []
