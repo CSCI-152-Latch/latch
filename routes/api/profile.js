@@ -4,7 +4,6 @@ const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profile');
-// const User = require('../../models/User');
 
 // Type:         GET
 // Where:        api/profile
@@ -56,8 +55,8 @@ router.post(
     '/', 
     auth, 
     [
-        check('user').notEmpty(),
-        check('status').notEmpty()
+        check('user').notEmpty()
+        // check('status').notEmpty()
     ],
     async (req, res) => {
         try {
