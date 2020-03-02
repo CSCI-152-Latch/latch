@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
     firstName: {            // Their first name
-        type: String,
+        type: String,       // Might use Regex
         required: true
     },
     lastName: {             // Thier last name
