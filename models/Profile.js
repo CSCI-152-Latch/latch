@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ProfileSchema = mongoose.Schema({
     user: {             //User ID
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
+        ref: 'users'
     },
     status: {           //Job position              
         type: String
