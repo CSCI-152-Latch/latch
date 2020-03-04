@@ -118,7 +118,7 @@ router.post(
                 friends,
                 requesting,
                 spending
-                
+
             });
 
             await friend.save();
@@ -136,20 +136,19 @@ router.post(
 // Acess:       Private
 router.post('/add', async (req, res) => {
     try {
-        const { currentUser, newUser } = req.body;
-        const requester = await Friend.findOne({ user: currentUser});
-        const spender = await Friend.findOne({ user: newUser });
-        
-        const exist = Friend.find({ spender: currentUser });
+        const { requesterUser, spenderUser } = req.body;
 
+        const exist = await Friend.findOne({ user: spenderUser, spending: requesterUser });
         if (exist) {
-            res.send('Already requested!');
+           return res.send('Already requested!');
         }
-        
-        requester.requesting.push(newUser);
-        requester.save();
 
-        spender.spending.push(currentUser);
+        const requester = await Friend.findOne({ user: requesterUser });
+        const spender = await Friend.findOne({ user: spenderUser });
+
+        requester.requesting.push(spenderUser);
+        requester.save();
+        spender.spending.push(requesterUser);
         spender.save();
 
         res.send({requester, spender});
@@ -161,11 +160,24 @@ router.post('/add', async (req, res) => {
 
 // Type:        GET
 // Where:       api/user
-// Purpose:     Deleting friends
+// Purpose:     Deleting friends or cancel friend request from the requester
 // Acess:       Private
 router.post('/delete', async (req, res) => {
     try {
-        
+        const { requesterUser, spenderUser } = req.body;
+
+        const requester = await Friend.findOne({ user: requesterUser, requesting: spenderUser });
+        const spender   = await Friend.findOne({ user: spenderUser, spending: requesterUser });
+
+        if (!requester && !spender) {
+            res.send('Users are not friends!');
+        }
+
+        requester.requesting.pull(spenderUser);
+        requester.save()
+        spender.spending.pull(requesterUser);
+        spender.save();
+        res.send({ requester, spender });
     }
     catch (err) {
         res.status(500).send(err);
