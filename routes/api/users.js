@@ -17,21 +17,24 @@ router.post(
     check("firstName", "Name is required")
       .not()
       .isEmpty(),
-      check("lastName", "Name is required")
+    check("lastName", "Name is required")
       .not()
       .isEmpty(),
     check("email", "Make sure email is valid").isEmail(),
+    check("nickName", "Username is required")
+      .not()
+      .isEmpty(),
     check("password", "Enter password minimum 6 characters").isLength({
       min: 6
     })
   ],
   async (req, res) => {
-    //console.log(req.body); when we want to check response in terminal
+    //console.log(req.body); //when we want to check response in terminal
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() }); //bad request
     } //for simplicity sake, we will deconstruct the req.body for the payload information
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, nickName, password } = req.body;
 
     //making a new query using findone()
     try {
@@ -40,6 +43,14 @@ router.post(
       let user = await User.findOne({ email });
       if (user) {
         return res.status(400).json({ errors: [{ msg: "User exists" }] });
+      }
+
+      //see if the user's nickname exists cause unique nicknames
+      let userName = await User.findOne({ nickName });
+      if (userName) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Username already taken" }] });
       }
 
       //get the gravatar
@@ -53,6 +64,7 @@ router.post(
         firstName,
         lastName,
         email,
+        nickName,
         avatar,
         password
       });
