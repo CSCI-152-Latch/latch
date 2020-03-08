@@ -86,6 +86,23 @@ router.post(
           id: user.id
         }
     }
+    jwt.sign(
+        payload,
+        config.get("jwtSecret"),
+        { expiresIn: 360000 },
+        (err, token) => {
+        if (err) throw err;
+            res.json({ token });
+        }
+    );
+    //res.send("User registered");
+    } 
+        catch (err) {
+            //if something goes wrong here then its a server error
+            console.error(err.message);
+            res.status(500).send("server error status 500");
+        }
+    }
 );
 
 // Type:        Post
@@ -163,7 +180,7 @@ router.post('/delete', async (req, res) => {
         const spender   = await Friend.findOne({ user: spenderUser, spending: requesterUser });
 
         if (!requester && !spender) {
-            res.send('Users are not friends!');
+            return res.send('Users are not friends!');
         }
 
         requester.requesting.pull(spenderUser);
@@ -176,5 +193,30 @@ router.post('/delete', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
+// Type:        Post
+// Where:       api/user
+// Purpose:     Creating a new friends list for a new user
+// Acess:       Private
+router.get(
+    '/view', 
+    // auth,
+    async (req, res) => {
+        try {
+            const { user } = req.body
+            console.log(user);
+            const currentUser = await Friend.findOne({ user: user })
+
+            if (!currentUser) {
+                return res.send('User not found');
+            }
+
+            res.send(currentUser.requesting);
+        }
+        catch (err) {
+            res.status(500).send(err);
+        }
+    }
+);
 
 module.exports = router;
