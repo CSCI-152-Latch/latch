@@ -196,7 +196,7 @@ router.post('/delete', async (req, res) => {
 
 // Type:        Post
 // Where:       api/user
-// Purpose:     Creating a new friends list for a new user
+// Purpose:     Finding a specific user
 // Acess:       Private
 router.get(
     '/view', 
