@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const ProfileSchema = mongoose.Schema({
-    user: {             //User ID
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
-    },
     status: {           //Job position              
         type: String
     },
@@ -38,6 +34,6 @@ const ProfileSchema = mongoose.Schema({
         type: [String],
         default: []
     }
-});
+}, {_id: false});
 
 module.exports = Profile = mongoose.model('profiles', ProfileSchema);

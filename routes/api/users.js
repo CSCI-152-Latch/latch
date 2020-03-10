@@ -4,6 +4,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
+const mongoose = require('mongoose')
 const { check, validationResult } = require("express-validator"); // better understanding on npm documentation
 const User = require("../../models/User"); //importing teh user model
 const Friend = require('../../models/Friend');
@@ -111,24 +112,16 @@ router.post(
 // Acess:       Private
 router.post(
     '/friend', 
-    // auth,
-    [
-        check('user').notEmpty()
-    ],
+    auth,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ error: errors.array()});
-        }
-
         try {
-            const { user, friends, requesting, spending } = req.body;
+            const { user, friends, requesting, spending } = req.body;   // Un packing the request object
+  
             const friend = new Friend({
-                user,
+                _id: new mongoose.Types.ObjectId(user),
                 friends,
                 requesting,
                 spending
-
             });
 
             await friend.save();
@@ -136,6 +129,7 @@ router.post(
         }
         catch (err) {
             res.status(500).send(err);
+            res.send('sdfsfdsdffds')   
         }
     }
 );
@@ -144,22 +138,24 @@ router.post(
 // Where:       api/user
 // Purpose:     Adding new friends
 // Acess:       Private
-router.post('/add', async (req, res) => {
+router.post('/add', auth, async (req, res) => {
     try {
-        const { requesterUser, spenderUser } = req.body;
+        const { newRequester, newSpender } = req.body;
+        const requesterID = mongoose.Types.ObjectId(newRequester);
+        const spenderID   = mongoose.Types.ObjectId(newSpender);
 
-        const exist = await Friend.findOne({ user: spenderUser, spending: requesterUser });
-        if (exist) {
+        const isRequest = await Friend.findOne({ _id: requesterID, requesting: newSpender });
+        if (isRequest) {
            return res.send('Already requested!');
         }
+        
+        const requester = await Friend.findById(requesterID);
+        const spender = await Friend.findById(spenderID);
 
-        const requester = await Friend.findOne({ user: requesterUser });
-        const spender = await Friend.findOne({ user: spenderUser });
-
-        requester.requesting.push(spenderUser);
-        requester.save();
-        spender.spending.push(requesterUser);
-        spender.save();
+        requester.requesting.push(newSpender);
+        spender.spending.push(newRequester);
+        await requester.save();
+        await spender.save();
 
         res.send({requester, spender});
     }
@@ -172,21 +168,23 @@ router.post('/add', async (req, res) => {
 // Where:       api/user
 // Purpose:     Deleting friends or cancel friend request from the requester
 // Acess:       Private
-router.post('/delete', async (req, res) => {
+router.post('/delete', auth, async (req, res) => {
     try {
-        const { requesterUser, spenderUser } = req.body;
+        const { currRequester, currSpender } = req.body;
+        const requesterID = mongoose.Types.ObjectId(currRequester);
+        const spenderID   = mongoose.Types.ObjectId(currSpender);
 
-        const requester = await Friend.findOne({ user: requesterUser, requesting: spenderUser });
-        const spender   = await Friend.findOne({ user: spenderUser, spending: requesterUser });
-
+        const requester = await Friend.findOne({ _id: requesterID, requesting: currSpender });
+        const spender   = await Friend.findOne({ _id: spenderID, spending: currRequester });
         if (!requester && !spender) {
             return res.send('Users are not friends!');
         }
 
-        requester.requesting.pull(spenderUser);
-        requester.save()
-        spender.spending.pull(requesterUser);
-        spender.save();
+        requester.requesting.pull(currSpender);
+        spender.spending.pull(currRequester);
+        await requester.save()
+        await spender.save();
+
         res.send({ requester, spender });
     }
     catch (err) {
@@ -196,16 +194,15 @@ router.post('/delete', async (req, res) => {
 
 // Type:        Post
 // Where:       api/user
-// Purpose:     Finding a specific user
+// Purpose:     Finding a specific friend (in friend, requesting, spending)
 // Acess:       Private
 router.get(
     '/view', 
     // auth,
     async (req, res) => {
         try {
-            const { user } = req.body
-            console.log(user);
-            const currentUser = await Friend.findOne({ user: user })
+            const { searchUser } = req.body
+            const currentUser = await Friend.findOne({ user: searchUser })
 
             if (!currentUser) {
                 return res.send('User not found');
