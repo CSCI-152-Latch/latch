@@ -53,21 +53,12 @@ router.get('/', auth, async(req, res) => {
 // Access:       Private
 router.post(
     '/', 
-    // auth, 
-    [
-        check('user').notEmpty()
-        // check('status').notEmpty()
-    ],
+    // auth,
     async (req, res) => {
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ error: errors.array() });
-            }
-
             const { user, status, bio, experience, field} = req.body;
             const profile = new Profile({
-                user,
+                _id: new mongoose.Types.ObjectId(user),
                 status,
                 bio,
                 experience,
