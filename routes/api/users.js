@@ -144,6 +144,11 @@ router.post('/add', auth, async (req, res) => {
         const requesterID = mongoose.Types.ObjectId(newRequester);
         const spenderID   = mongoose.Types.ObjectId(newSpender);
 
+        const isFriend = await Friend.findOne({ _id: requesterID, friends: newSpender });
+        if (isFriend) {
+            return res.send('You are already friend!');
+        }
+
         const isRequest = await Friend.findOne({ _id: requesterID, requesting: newSpender });
         if (isRequest) {
            return res.send('Already requested!');
@@ -157,7 +162,7 @@ router.post('/add', auth, async (req, res) => {
         await requester.save();
         await spender.save();
 
-        res.send({requester, spender});
+        res.send({ requester, spender });
     }
     catch (err) {
         res.status(500).send(err);
@@ -203,7 +208,7 @@ router.post('/delete', auth, async (req, res) => {
         const spenderID   = mongoose.Types.ObjectId(currSpender);
 
         const requester = await Friend.findOne({ _id: requesterID, friends: currSpender });
-        const spender   = await Friend.find({ _id: spenderID, friends: currRequester });
+        const spender   = await Friend.findOne({ _id: spenderID, friends: currRequester });
 
         if (!requester || !spender) {
             res.send('Someone is hacking');
@@ -234,6 +239,7 @@ router.post('/accept', auth, async (req, res) => {
         const requester = await Friend.findOne({ _id: requesterID, requesting: currSpender });
         const spender   = await Friend.findOne({ _id: spenderID, spending: currRequester });
 
+        console.log({ requester, spender })
         if (!requester || !spender) {
             res.status(500).send('Someone is hacking');
         }
@@ -245,6 +251,8 @@ router.post('/accept', auth, async (req, res) => {
 
         await requester.save();
         await spender.save();
+
+        res.send({ requester, spender })
     }
     catch (err) {
         res.status(500).send(err);
