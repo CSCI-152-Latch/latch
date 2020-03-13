@@ -11,7 +11,7 @@ const Friend = require('../../models/Friend');
 const auth = require('../../middleware/auth');
 //express-validator helps making sure that the fileds are filled correctly
 
-// Type:        Post
+// Type:        POST
 // Where:       api/user
 // Purpose:     Registerig a new user
 // Acess:       Public
@@ -106,7 +106,7 @@ router.post(
     }
 );
 
-// Type:        Post
+// Type:        POST
 // Where:       api/user
 // Purpose:     Creating a new friends list for a new user
 // Acess:       Private
@@ -134,7 +134,7 @@ router.post(
     }
 );
 
-// Type:        GET
+// Type:        POST
 // Where:       api/user
 // Purpose:     Adding new friends
 // Acess:       Private
@@ -164,11 +164,11 @@ router.post('/add', auth, async (req, res) => {
     }
 });
 
-// Type:        GET
+// Type:        POST
 // Where:       api/user
-// Purpose:     Deleting friends or cancel friend request from the requester
+// Purpose:     Cancel friend request
 // Acess:       Private
-router.post('/delete', auth, async (req, res) => {
+router.post('/cancel', auth, async (req, res) => {
     try {
         const { currRequester, currSpender } = req.body;
         const requesterID = mongoose.Types.ObjectId(currRequester);
@@ -182,7 +182,7 @@ router.post('/delete', auth, async (req, res) => {
 
         requester.requesting.pull(currSpender);
         spender.spending.pull(currRequester);
-        await requester.save()
+        await requester.save();
         await spender.save();
 
         res.send({ requester, spender });
@@ -192,7 +192,66 @@ router.post('/delete', auth, async (req, res) => {
     }
 });
 
-// Type:        Post
+// Type:        POST
+// Where:       api/user
+// Purpose:     Delete a friend
+// Acess:       Private
+router.post('/delete', auth, async (req, res) => {
+    try {
+        const { currRequester, currSpender } = req.body;
+        const requesterID = mongoose.Types.ObjectId(currRequester);
+        const spenderID   = mongoose.Types.ObjectId(currSpender);
+
+        const requester = await Friend.findOne({ _id: requesterID, friends: currSpender });
+        const spender   = await Friend.find({ _id: spenderID, friends: currRequester });
+
+        if (!requester || !spender) {
+            res.send('Someone is hacking');
+        }
+
+        requester.friends.pull(currSpender);
+        spender.friends.pull(currRequester);
+        await requester.save();
+        await spender.save();
+        
+        res.send({ requester, spender })
+    }
+    catch (err) {
+        res.status(500).send(err)
+    }
+});
+
+// Type:        POST
+// Where:       api/user
+// Purpose:     Accepting a friend
+// Acess:       Private
+router.post('/accept', auth, async (req, res) => {
+    try {
+        const { currRequester, currSpender } = req.body;
+        const requesterID = mongoose.Types.ObjectId(currRequester);
+        const spenderID   = mongoose.Types.ObjectId(currSpender);
+
+        const requester = await Friend.findOne({ _id: requesterID, requesting: currSpender });
+        const spender   = await Friend.findOne({ _id: spenderID, spending: currRequester });
+
+        if (!requester || !spender) {
+            res.status(500).send('Someone is hacking');
+        }
+
+        requester.requesting.pull(currSpender);
+        spender.spending.pull(currRequester);
+        requester.friends.push(currSpender);
+        spender.friends.push(currRequester);
+
+        await requester.save();
+        await spender.save();
+    }
+    catch (err) {
+        res.status(500).send(err);
+    }
+})
+
+// Type:        GET
 // Where:       api/user
 // Purpose:     Finding a specific friend (in friend, requesting, spending)
 // Acess:       Private
