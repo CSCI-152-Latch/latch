@@ -8,9 +8,10 @@ const { check, validationResult } = require("express-validator"); // better unde
 const User = require("../../models/User"); //importing teh user model
 //express-validator helps making sure that the fileds are filled correctly
 
-//Post   api/users
-//      register
-//      public (no token needed)
+// Type:         POST
+// Where:        api/
+// Purpose:      Registering
+// Access:       Public
 router.post(
   "/",
   [
