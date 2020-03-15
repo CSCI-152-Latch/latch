@@ -32,7 +32,8 @@ router.post('/group', auth, async (req, res) => {
         const users = req.body
 
         const chatList = new Chat({
-           users: users
+           users: users,
+           messages: []
         })
         
         await chatList.save()
@@ -49,15 +50,16 @@ router.post('/group', auth, async (req, res) => {
 // Access:       Private
 router.post('/message', auth, async (req, res) => {
     try {
-        //req -> {messageID, userID, message}
-        const { chatID, userID, message} = req.body;
-        const currChat = Chat.findOne({_id: chatID, users: {_id: mongoose.Types.ObjectId(userID)}});
+        const { id, message, owner } = req.body;
+        const chat = await Chat.findById(id);
 
-        currChat.messaging.push(message);
-        //Something like this. Will chnage later
+        chat.messages.push({
+            message: message,
+            _id: owner
+        });
 
-        await (await currChat).save();
-        res.send(currChat);
+        await chat.save();
+        res.send(chat);
     }
     catch (err) {
         res.status(500).send(err);

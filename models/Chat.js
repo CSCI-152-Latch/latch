@@ -10,7 +10,19 @@ const ChatSchema = mongoose.Schema({
         }
     ],
     messages: [
-        
+        {
+            message: {
+                type: String
+            },
+            owner: {
+                type: String,
+                ref: 'users'
+            },
+            date: {
+                type: Date,
+                default: Date.now()
+            }
+        }
     ]
 });
 
