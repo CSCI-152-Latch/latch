@@ -50,12 +50,12 @@ router.post('/group', auth, async (req, res) => {
 // Access:       Private
 router.post('/message', auth, async (req, res) => {
     try {
-        const { id, message, owner } = req.body;
-        const chat = await Chat.findById(id);
+        const { chatID, message, userID } = req.body;
+        const chat = await Chat.findById(chatID);
 
         chat.messages.push({
-            message: message,
-            _id: owner
+            _id: userID,
+            message: message            
         });
 
         await chat.save();

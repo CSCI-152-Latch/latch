@@ -4,19 +4,19 @@ const ChatSchema = mongoose.Schema({
     users: [
         {
             _id: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: String,
                 ref: 'users'
             }
         }
     ],
     messages: [
         {
-            message: {
-                type: String
-            },
-            owner: {
+            _id: {
                 type: String,
                 ref: 'users'
+            },
+            message: {
+                type: String
             },
             date: {
                 type: Date,
