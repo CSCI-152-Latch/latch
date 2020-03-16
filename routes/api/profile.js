@@ -9,7 +9,7 @@ const Profile = require('../../models/Profile');
 // Where:        api/profile
 // Purpose:      Getting a specific user and their profile data for other users to view
 // Access:       Private
-router.get('/others', auth, async (req, res) => {
+router.get('/others', auth.auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ _id: req.user.id }).populate(
             '_id',
@@ -31,7 +31,7 @@ router.get('/others', auth, async (req, res) => {
 // Where:       api/profile
 // Purpose:     Getting the user and profile data to the owner to see
 // Acess:       Private
-router.get('/me', auth, async(req, res) => {
+router.get('/me', auth.auth, async(req, res) => {
     try {
         const [profile] = await Profile.find({ _id: req.user.id }).populate('_id');
         if (!profile) {
@@ -52,7 +52,7 @@ router.get('/me', auth, async(req, res) => {
 // Access:       Private
 router.post(
     '/new', 
-    auth,
+    auth.auth,
     async (req, res) => {
         try {
             const { user, status, bio, experience, field } = req.body;

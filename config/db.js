@@ -10,7 +10,8 @@ const connectDB = async () => {
     await mongoose.connect(db, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     }); //we do this so we can use async / await like promises
 
     console.log("MongoDB Latched..");
