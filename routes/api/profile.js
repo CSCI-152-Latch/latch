@@ -9,41 +9,49 @@ const Profile = require('../../models/Profile');
 // Where:        api/profile
 // Purpose:      Getting a specific user and their profile data for other users to view
 // Access:       Private
-router.get('/others', auth, async (req, res) => {
-    try {
-        const profile = await Profile.findOne({ _id: req.user.id }).populate(
-            '_id',
-            ['firstName', 'lastName', 'email', 'avatar']
-        );
-        
-        if (!profile) {
-            return res.status(400).json({ msg: 'There is no profile for this user' });
-        }
+router.get(
+    '/others', 
+    auth, 
+    async (req, res) => {
+        try {
+            const profile = await Profile.findOne({ _id: req.user.id }).populate(
+                '_id',
+                ['firstName', 'lastName', 'email', 'avatar']
+            );
+            
+            if (!profile) {
+                return res.status(400).json({ msg: 'There is no profile for this user' });
+            }
 
-        res.send(profile);
+            res.send(profile);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
     }
-    catch (err) {
-        res.status(500).send('Server Error');
-    }
-});
+);
 
 // Type:        GET
 // Where:       api/profile
 // Purpose:     Getting the user and profile data to the owner to see
 // Acess:       Private
-router.get('/me', auth, async(req, res) => {
-    try {
-        const [profile] = await Profile.find({ _id: req.user.id }).populate('_id');
-        if (!profile) {
-            return res.status(400).json({ msg: 'There is no profile for this user' });
-        }
+router.get(
+    '/me', 
+    auth, 
+    async(req, res) => {
+        try {
+            const [profile] = await Profile.find({ _id: req.user.id }).populate('_id');
+            if (!profile) {
+                return res.status(400).json({ msg: 'There is no profile for this user' });
+            }
 
-        res.send(profile);
+            res.send(profile);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
     }
-    catch (err) {
-        res.status(500).send('Server Error');
-    }
-})
+);
 
 
 // Type:         POST
