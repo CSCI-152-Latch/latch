@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require('mongoose');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const { check, validationResult } = require('express-validator');
 
 const Chat = require('../../models/Chat');
 
@@ -13,10 +12,12 @@ const Chat = require('../../models/Chat');
 router.get('/view', auth, async (req, res) => {
     try {
         const { user } = req.body;
-        const userID = mongoose.Types.ObjectId(user);
-        const chatList = await Chat.find({ users: { _id: userID }})
 
-        res.send(chatList);
+        const chats = await Chat.find(
+            { users: user }
+        );
+
+        res.send(chats);
     }
     catch (err) {  
         res.status(500).send(err);
@@ -30,14 +31,12 @@ router.get('/view', auth, async (req, res) => {
 router.post('/group', auth, async (req, res) => {
     try {
         const users = req.body
-
-        const chatList = new Chat({
-           users: users,
-           messages: []
-        })
         
-        await chatList.save()
-        res.send(req.body);
+        const chat = await Chat.create(
+            { users: users }
+        );
+
+        res.send(chat)
     }
     catch (err) {
         res.status(500).send(err);
@@ -50,20 +49,51 @@ router.post('/group', auth, async (req, res) => {
 // Access:       Private
 router.post('/message', auth, async (req, res) => {
     try {
-        const { chatID, message, userID } = req.body;
-        const chat = await Chat.findById(chatID);
+        const { chatID, userID, message } = req.body;
 
-        chat.messages.push({
-            _id: userID,
-            message: message            
-        });
+        const isChat = await Chat.exists(
+            { _id: chatID }
+        )
+        if (!isChat) {
+            return res.send('Chat does not exist');
+        }
 
-        await chat.save();
-        res.send(chat);
+        const addMessage = await Chat.findByIdAndUpdate( 
+            chatID,
+            {
+                $push: {
+                    messages: {
+                        _id: userID,
+                        message: message
+                    }
+                }
+            },
+            { new: true }
+        );
+        // Side note: Might get the first 10 recent message and not all them
+        res.send(addMessage);
     }
     catch (err) {
         res.status(500).send(err);
     }
+})
+
+// Type:         POST
+// Where:        api/chat
+// Purpose:      Delete chat
+// Access:       Private
+router.post('/delete', auth, async (req, res) => {
+    const { chatID } = req.body;
+
+    const isChat = await Chat.exists(
+        { _id: chatID }
+    );
+    if (!isChat) {
+        return res.send('Chat does not exist');
+    }
+
+    const deleteChat = await Chat.findByIdAndDelete(chatID);
+    res.send('deleteChat');
 })
 
 module.exports = router
