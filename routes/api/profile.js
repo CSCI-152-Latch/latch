@@ -1,57 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require('../../middleware/auth');
-
 const Profile = require('../../models/Profile');
-
-// Type:         GET
-// Where:        api/profile
-// Purpose:      Getting a specific user and their profile data for other users to view
-// Access:       Private
-router.get(
-    '/others', 
-    auth, 
-    async (req, res) => {
-        try {
-            const profile = await Profile.findOne({ _id: req.user.id }).populate(
-                '_id',
-                ['firstName', 'lastName', 'email', 'avatar']
-            );
-            
-            if (!profile) {
-                return res.status(400).json({ msg: 'There is no profile for this user' });
-            }
-
-            res.send(profile);
-        }
-        catch (err) {
-            res.status(500).send('Server Error');
-        }
-    }
-);
-
-// Type:        GET
-// Where:       api/profile
-// Purpose:     Getting the user and profile data to the owner to see
-// Acess:       Private
-router.get(
-    '/me', 
-    auth, 
-    async(req, res) => {
-        try {
-            const [profile] = await Profile.find({ _id: req.user.id }).populate('_id');
-            if (!profile) {
-                return res.status(400).json({ msg: 'There is no profile for this user' });
-            }
-
-            res.send(profile);
-        }
-        catch (err) {
-            res.status(500).send('Server Error');
-        }
-    }
-);
-
 
 // Type:         POST
 // Where:        api/profile
@@ -63,7 +13,7 @@ router.post(
     async (req, res) => {
         try {
             const { user, status, bio, experience, field } = req.body;
-            const newProfile = Profile.create(
+            const newProfile = await Profile.create(
                 {
                     _id: user,
                     status,
@@ -77,6 +27,65 @@ router.post(
         }
         catch (err) {
             res.status(500).send(err);
+        }
+    }
+);
+
+// Type:        GET
+// Where:       api/profile
+// Purpose:     Getting the user and profile data to the owner to see
+// Acess:       Private
+router.get(
+    '/me', 
+    auth, 
+    async(req, res) => {
+        try {
+            const { user } = req.body;
+            
+            const isProfile = await Profile.exists(
+                { _id: user }
+            );
+            if (!isProfile) {
+                return res.status(400).send('There is no profile for this user');
+            }
+
+            const getProfile = await Profile.findById(user).populate('_id');
+
+            res.send(getProfile);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
+    }
+);
+
+// Type:         GET
+// Where:        api/profile
+// Purpose:      Getting a specific user and their profile data for other users to view
+// Access:       Private
+router.get(
+    '/others', 
+    auth, 
+    async (req, res) => {
+        try {
+            const { user } = req.body;
+            
+            const isProfile = await Profile.exists(
+                { _id: user }
+            );
+            if (!isProfile) {
+                return res.status(400).send('There is no profile for this user');
+            }
+
+            const getProfile = await Profile.findById(user).populate(
+                '_id',
+                ['firstName', 'lastName', 'email', 'avatar']
+            );
+
+            res.send(getProfile);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
         }
     }
 );

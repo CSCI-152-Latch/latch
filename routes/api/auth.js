@@ -1,18 +1,139 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const gravatar = require("gravatar");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { check, validationResult } = require("express-validator");
+const { check, validationResult, body } = require("express-validator");
 const User = require("../../models/User");
+
+// Type:         POST
+// Where:        api/auth
+// Purpose:      Registering
+// Access:       Public
+router.post(
+    '/register',
+    [
+        check('firstName')
+            .notEmpty().withMessage('First name is require')
+            .isAlpha().withMessage('First name must be alphabet'),
+
+        check('lastName')
+            .notEmpty().withMessage('Last name is require')
+            .isAlpha().withMessage('Last name must be alphabet'),
+
+        check('email')
+            .notEmpty().withMessage('Email is require')
+            .isEmail().withMessage('Email must be in correct format'),
+
+        check('nickName')
+            .notEmpty().withMessage('Nickname is require'),
+
+        check('password')
+            .isLength({ min: 6 }).withMessage('Enter password minimum 6 characters'),
+    
+        body('nickName')
+            .trim()
+    ],
+    async (req, res) => {
+        // Check data correspond to the validation for each field
+        const areErrors = validationResult(req);
+
+        // If there is atleast one error then it is bad request
+        if (!areErrors.isEmpty()) {
+            const errors = { errors: areErrors.array() };
+            return res.status(400).json(errors); 
+        } 
+
+        // Unpacking the request body
+        const { firstName, lastName, email, nickName, password } = req.body;
+
+        // Staring a query
+        try {
+            // Check if the email is unique
+            const isEmail = await User.exists(
+                { email: email }
+            );
+            if (isEmail) {
+                console.log('sdadasdsa');
+                const errors = { 
+                    errors: [
+                        { msg: "Email already taken" }
+                    ] 
+                };
+                return res.status(400).json(errors);
+            }
+            
+            // Check if the nickName is unique
+            const isNickname = await User.exists(
+                { nickName: nickName }
+            );
+            if (isNickname) {
+                const errors = { 
+                    errors: [
+                        { msg: "Nickname already taken" }
+                    ] 
+                };
+                return res.status(400).json(errors);
+            }
+
+            // Get the gravatar
+            const avatar = gravatar.url(email, {
+                s: "200",
+                r: "pg",
+                d: "retro"
+            });
+
+            // Creating an encryption for password with bycrypt js
+            // The salt is what will be hashing
+            const salt = await bcrypt.genSalt(10); 
+            const encryptPassword = await bcrypt.hash(password, salt);
+
+            // Create a new user
+            const newUser = await User.create(
+                {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    nickName: nickName,
+                    avatar: avatar,
+                    password: encryptPassword
+                }
+            );
+
+            // Using user ID for our payload
+            const payload = {
+                user: {
+                    id: newUser._id
+                }
+            }
+
+            // Returning a JsonWebToken for traversing through protected routes
+            jwt.sign(
+                payload,
+                config.get("jwtSecret"),
+                { expiresIn: "20d" },
+                (err, token) => {
+                    if (err) {
+                        throw err;
+                    }
+                    res.json({ token });
+                }
+            );
+        } 
+        catch (err) {
+            res.status(500).send("Server error status 500");
+        }
+    }
+);
+
 
 // Type:        POST
 // Where:       api/auth
 // Purpose:     Login
 // Acess:       Public
 router.post(
-    '/',
+    '/login',
     [
         check('email')
             .notEmpty().withMessage('Email is require')
@@ -22,55 +143,70 @@ router.post(
             .notEmpty().withMessage('Password is require')
     ],
     async (req, res) => {
+        // Check data correspond to the validation for each field
+        const areErrors = validationResult(req);
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() }); //bad request
+        // If there is atleast one error then it is bad request
+        if (!areErrors.isEmpty()) {
+            const errors = { errors: areErrors.array() };
+            return res.status(400).json(errors); 
         } 
-        //for simplicity sake, we will deconstruct the req.body for the payload information
+
+        // Unpacking the request body
         const { email, password } = req.body;
 
-        //making a new query using findone()
+        // Starting a new query
         try {
-            //here are going to run a few checks to make to register the user
-            //see if the user exists cause only unique emails**
-            let user = await User.findOne({ email });
-            if (!user) {
-                return res
-                .status(400)
-                .json({ errors: [{ msg: "invalid credentials" }] });
+            // Check if email exist
+            const isEmail = await User.exists(
+                { email: email }
+            );
+            if (!isEmail) {
+                const error = { 
+                    errors: [
+                        { msg: "Invalid Credentials" }
+                    ] 
+                };
+                return res.status(400).json(error);
             }
 
-            const isMatch = await bcrypt.compare(password, user.password);
+            const getUser = await User.findOne(
+                { email: email }
+            ).select('password')
+
+            // Check if password is match
+            const isMatch = await bcrypt.compare(password, getUser.password);
             if (!isMatch) {
-                return res
-                .status(400)
-                .json({ errors: [{ msg: "invalid credentials" }] });
+                const error = { 
+                    errors: [
+                        { msg: "Invalid Credentials" }
+                    ] 
+                };
+                return res.status(400).json(error);
             }
-
-            //return the jsonwebtocken for traversing the site.
-            //JWT's return a payload and what we will be using is the User's Id as the payload so that they can
-            //traverse through protected routes.
+            
+            // Using user ID for our payload
             const payload = {
                 user: {
-                id: user.id
+                    id: getUser._id
                 }
             };
 
+            // Returning a JsonWebToken for traversing through protected routes
             jwt.sign(
                 payload,
                 config.get("jwtSecret"),
-                { expiresIn: 36000000000 },
+                { expiresIn: "20d" },
                 (err, token) => {
-                if (err) throw err;
-                res.json({ token });
+                    if (err) {
+                        throw err;
+                    }
+                    res.json({ token });
                 }
             );
         } 
         catch (err) {
-            //if something goes wrong here then its a server error
-            console.error(err.message);
-            res.status(500).send("server error status 500");
+            res.status(500).send("Server error status 500");
         }
     }
 );
