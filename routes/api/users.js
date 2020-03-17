@@ -119,11 +119,11 @@ router.post(
 // Acess:       Private
 router.post(
     '/friend', 
-    auth.auth,
+    auth,
     async (req, res) => {
         try {
-            // Unpacking the request object
             const { user, friends, requesting, spending } = req.body;  
+            
             await Friend.create(
                 {
                     _id: user,
@@ -151,16 +151,40 @@ router.post(
 // Acess:       Private
 router.post(
     '/add', 
-    [auth.auth, auth.is_friend, auth.is_request], 
+    auth, 
     async (req, res) => {
         try {
             const { newRequester, newSpender } = req.body;
 
+            // Check if both user in request and spending list
+            const isRequested = await Friend.exists(
+                {
+                    _id: newRequester,
+                    requesting: newSpender
+                }
+            ); 
+            if (isRequested) {
+                return res.send('You have already requested this user!');
+            }
+
+            // Check if both user are friend
+            const isFriend = await Friend.exists(
+                { 
+                    _id: newRequester, 
+                    friends: newSpender 
+                }
+            );
+            if (isFriend) {
+                return res.send('This user is your friend already');
+            }
+
+            // Request to be friend
             const requester = await Friend.findOneAndUpdate(
                 { _id: newRequester },
                 {
                     $addToSet: { requesting: newSpender }
                 },
+                { new: true },
                 (error, _) => {
                     if (error) {
                         return res.send('Requester user doesn\'t exist');
@@ -173,13 +197,14 @@ router.post(
                 {
                     $addToSet: { spending: newRequester } 
                 },
+                { new: true },
                 (error, _) => {
                     if (error) {
                         return res.send('Spender user doesn\'t exist');
                     }
                 }
             );
-
+            
             res.send({ requester, spender });
         }
         catch (err) {
@@ -194,16 +219,29 @@ router.post(
 // Acess:       Private
 router.post(
     '/cancel', 
-    [auth.auth, auth.not_related], 
+    auth, 
     async (req, res) => {
         try {
             const { currRequester, currSpender } = req.body;
 
+            // Check if both user are in request and spending
+            const isRequest = await Friend.exists(
+                {
+                    _id: currRequester,
+                    requesting: currSpender
+                }
+            ); 
+            if (!isRequest) {
+                return res.send('You dont know this user!');
+            }
+
+            // Cancel the request and spending
             const requester = await Friend.findOneAndUpdate(
                 { _id: currRequester },
                 {
                     $pull: { requesting: currSpender }
                 },
+                { new: true },
                 (error, _) => {
                     if (error) {
                         res.status(500).send('Reqeuster doesn\'t have the spender');
@@ -216,6 +254,7 @@ router.post(
                 {
                     $pull: { spending: currRequester }
                 },
+                { new: true },
                 (error, _) => {
                     if (error) {
                         res.status(500).send('Spender doesn\'t have the requester');
@@ -235,61 +274,97 @@ router.post(
 // Where:       api/user
 // Purpose:     Delete a friend
 // Acess:       Private
-router.post('/delete', auth.auth, async (req, res) => {
-    try {
-        const { currRequester, currSpender } = req.body;
+router.post(
+    '/delete', 
+    auth, 
+    async (req, res) => {
+        try {
+            const { currRequester, currSpender } = req.body;
 
-        const requester = await Friend.findOneAndUpdate(
-            { _id: currRequester },
-            {
-                $pull: { friends: currSpender }
+            // This check if both user are friend
+            const isFriend = await Friend.exists(
+                { 
+                    _id: currRequester, 
+                    friends: currSpender 
+                }
+            );
+            if (!isFriend) {
+                return res.send('You don\'t have this user as a friend!');
             }
-        );
-        
-        const spender = await Friend.findOneAndUpdate(
-        { _id: currSpender },
-        {
-            $pull: { friends: currRequester }
-        }  
-        );
-        
-        res.send({ requester, spender })
+
+            // Delete each other from thier friend list
+            const requester = await Friend.findOneAndUpdate(
+                { _id: currRequester },
+                {
+                    $pull: { friends: currSpender }
+                },
+                { new: true }
+            );
+            
+            const spender = await Friend.findOneAndUpdate(
+                { _id: currSpender },
+                {
+                    $pull: { friends: currRequester }
+                },
+                { new: true }  
+            );
+            
+            res.send({ requester, spender })
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
     }
-    catch (err) {
-        res.status(500).send(err)
-    }
-});
+);
 
 // Type:        POST
 // Where:       api/user
 // Purpose:     Accepting a friend
 // Acess:       Private
-router.post('/accept', auth.auth, async (req, res) => {
-    try {
-        const { currRequester, currSpender } = req.body;
-        
-        const requester = await Friend.findOneAndUpdate(
-            { _id: currRequester }, 
-            {
-                $pull: { requesting: currSpender },
-                $addToSet: { friends: currSpender }
-            }
-        );
+router.post(
+    '/accept', 
+    auth, 
+    async (req, res) => {
+        try {
+            const { currRequester, currSpender } = req.body;
 
-        const spender = await Friend.findOneAndUpdate(
-            { _id: currSpender },
-            {
-                $pull: { spending: currRequester },
-                $addToSet: { friends: currRequester }
+            // Check both user are in requesting and spending
+            const isSpending = await Friend.exists(
+                {
+                    _id: currSpender,
+                    spending: currRequester
+                }
+            );
+            if (!isSpending) {
+                return res.send('You cant add this user!');
             }
-        );
+            
+            // Add each other
+            const requester = await Friend.findOneAndUpdate(
+                { _id: currRequester }, 
+                {
+                    $pull: { requesting: currSpender },
+                    $addToSet: { friends: currSpender }
+                },
+                { new: true }
+            );
 
-        res.send({ requester, spender })
+            const spender = await Friend.findOneAndUpdate(
+                { _id: currSpender },
+                {
+                    $pull: { spending: currRequester },
+                    $addToSet: { friends: currRequester }
+                },
+                { new: true }
+            );
+
+            res.send({ requester, spender })
+        }
+        catch (err) {
+            res.status(500).send(err);
+        }
     }
-    catch (err) {
-        res.status(500).send(err);
-    }
-})
+)
 
 // Type:        GET
 // Where:       api/user
@@ -297,17 +372,20 @@ router.post('/accept', auth.auth, async (req, res) => {
 // Acess:       Private
 router.get(
     '/view', 
-    auth.auth,
+    auth,
     async (req, res) => {
         try {
             const { searchUser } = req.body
-            const currentUser = await Friend.findOne({ _id: searchUser })
 
-            if (!currentUser) {
+            const isUser = await Friend.exists(
+                { _id: searchUser }
+            );
+            if (!isUser) {
                 return res.send('User not found');
             }
 
-            res.send(currentUser.requesting);
+            // Not complete
+            res.send("Valid");
         }
         catch (err) {
             res.status(500).send(err);
