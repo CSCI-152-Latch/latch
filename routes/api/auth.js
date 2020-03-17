@@ -55,7 +55,6 @@ router.post(
                 { email: email }
             );
             if (isEmail) {
-                console.log('sdadasdsa');
                 const errors = { 
                     errors: [
                         { msg: "Email already taken" }
