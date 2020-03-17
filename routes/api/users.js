@@ -11,10 +11,10 @@ const Friend = require('../../models/Friend');
 const auth = require('../../middleware/auth');
 //express-validator helps making sure that the fileds are filled correctly
 
-// Type:        POST
-// Where:       api/user
-// Purpose:     Registerig a new user
-// Acess:       Public
+// Type:         POST
+// Where:        api/
+// Purpose:      Registering
+// Access:       Public
 router.post(
     '/',
     [
