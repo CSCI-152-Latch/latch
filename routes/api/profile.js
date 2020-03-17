@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
 const auth = require('../../middleware/auth');
 
 const Profile = require('../../models/Profile');
@@ -64,18 +63,17 @@ router.post(
     async (req, res) => {
         try {
             const { user, status, bio, experience, field } = req.body;
-            const profile = new Profile({
-                _id: new mongoose.Types.ObjectId(user),
-                status,
-                bio,
-                experience,
-                field
-            });
+            const newProfile = Profile.create(
+                {
+                    _id: user,
+                    status,
+                    bio,
+                    experience,
+                    field
+                }
+            );
 
-            console.log(profile);
-            
-            await profile.save();
-            res.send(profile);
+            res.send(newProfile);
         }
         catch (err) {
             res.status(500).send(err);

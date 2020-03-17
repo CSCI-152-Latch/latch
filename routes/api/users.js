@@ -4,7 +4,6 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
-const mongoose = require('mongoose')
 const { check, validationResult, body } = require("express-validator"); // better understanding on npm documentation
 const User = require("../../models/User"); //importing teh user model
 const Friend = require('../../models/Friend');
@@ -123,21 +122,16 @@ router.post(
     async (req, res) => {
         try {
             const { user, friends, requesting, spending } = req.body;  
-            
-            await Friend.create(
+            const newFriends = await Friend.create(
                 {
                     _id: user,
                     friends,
                     requesting,
                     spending
-                },
-                (error, result) => {
-                   if (error) {
-                       return res.status(500).send(error);
-                   }
-                   return res.send(result);
                 }
             );
+
+            return res.send(newFriends);
         }
         catch (err) {
             res.status(500).send(err);  
