@@ -28,72 +28,84 @@ router.get('/view', auth, async (req, res) => {
 // Where:        api/chat
 // Purpose:      Create a chat
 // Access:       Private
-router.post('/group', auth, async (req, res) => {
-    try {
-        const users = req.body
-        
-        const chat = await Chat.create(
-            { users: users }
-        );
+router.post(
+    '/group', 
+    auth, 
+    async (req, res) => {
+        try {
+            const users = req.body
+            
+            const chat = await Chat.create(
+                { users: users }
+            );
 
-        res.send(chat)
+            res.send(chat)
+        }
+        catch (err) {
+            res.status(500).send(err);
+        }
     }
-    catch (err) {
-        res.status(500).send(err);
-    }
-})
+);
 
 // Type:         POST
 // Where:        api/chat
 // Purpose:      Add a message
 // Access:       Private
-router.post('/message', auth, async (req, res) => {
-    try {
-        const { chatID, userID, message } = req.body;
+router.post(
+    '/message', 
+    auth, 
+    async (req, res) => {
+        try {
+            const { chatID, userID, message } = req.body;
 
-        const isChat = await Chat.exists(
-            { _id: chatID }
-        )
-        if (!isChat) {
-            return res.send('Chat does not exist');
-        }
+            const isChat = await Chat.exists(
+                { _id: chatID }
+            )
+            if (!isChat) {
+                return res.send('Chat does not exist');
+            }
 
-        const addMessage = await Chat.findByIdAndUpdate( 
-            chatID,
-            {
-                $push: {
-                    messages: {
-                        _id: userID,
-                        message: message
+            const addMessage = await Chat.findByIdAndUpdate( 
+                chatID,
+                {
+                    $push: {
+                        messages: {
+                            _id: userID,
+                            message: message
+                        }
                     }
-                }
-            },
-            { new: true }
-        );
-        // Side note: Might get the first 10 recent message and not all them
-        res.send(addMessage);
+                },
+                { new: true }
+            );
+            // Side note: Might get the first 10 recent message and not all them
+            res.send(addMessage);
+        }
+        catch (err) {
+            res.status(500).send(err);
+        }
     }
-    catch (err) {
-        res.status(500).send(err);
-    }
-})
+);
 
 // Type:         POST
 // Where:        api/chat
 // Purpose:      Delete chat
 // Access:       Private
-router.post('/delete', auth, async (req, res) => {
-    const { chatID } = req.body;
+router.post(
+    '/delete', 
+    auth, 
+    async (req, res) => {
+        const { chatID } = req.body;
 
-    const isChat = await Chat.exists(
-        { _id: chatID }
-    );
-    if (!isChat) {
-        return res.send('Chat does not exist');
+        const isChat = await Chat.exists(
+            { _id: chatID }
+        );
+        if (!isChat) {
+            return res.send('Chat does not exist');
+        }
+
+        const deleteChat = await Chat.findByIdAndDelete(chatID);
+        res.send('deleteChat');
     }
-
-    const deleteChat = await Chat.findByIdAndDelete(chatID);
-    res.send('deleteChat');
-})
+);
 
 module.exports = router
