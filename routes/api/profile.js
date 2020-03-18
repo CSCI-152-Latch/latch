@@ -48,7 +48,6 @@ router.get(
             if (!isProfile) {
                 return res.status(400).send('There is no profile for this user');
             }
-
             const getProfile = await Profile.findById(user).populate('_id');
 
             res.send(getProfile);
