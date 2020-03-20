@@ -5,6 +5,8 @@ import Landing from "./GlobalComponents/layout/Landing";
 import Login from "./GlobalComponents/auth/Login";
 import Register from "./GlobalComponents/auth/Register";
 import Alert from "./GlobalComponents/layout/Alert";
+import Setting from './GlobalComponents/p-form/Setting'
+
 //redux stuff
 import { Provider } from "react-redux";
 import store from "./store";
@@ -32,6 +34,7 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path='/profile' component={Setting} />
             </Switch>
           </section>
         </Fragment>

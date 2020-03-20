@@ -4,8 +4,29 @@ const gravatar = require("gravatar");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const auth = require('../../middleware/auth')
 const { check, validationResult, body } = require("express-validator");
 const User = require("../../models/User");
+
+// Type:         GET
+// Where:        api/auth
+// Purpose:      Testing
+// Access:       Public
+router.get( 
+    "/", 
+    auth,
+    async (req, res) => {
+        try {
+            const { userID } = req.body
+            const user = await User.findById(userID).select("-password");
+            res.json(user);
+        } catch (err) {
+            console.error(err.message);
+
+            res.status(500).send("Server error");
+        }   
+    }
+);
 
 // Type:         POST
 // Where:        api/auth

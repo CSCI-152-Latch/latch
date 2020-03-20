@@ -40,16 +40,16 @@ router.get(
     auth, 
     async(req, res) => {
         try {
-            const { user } = req.body;
-            
+            const { user } = req.query;
+
             const isProfile = await Profile.exists(
                 { _id: user }
-            );
+            )
             if (!isProfile) {
                 return res.status(400).send('There is no profile for this user');
             }
-            const getProfile = await Profile.findById(user).populate('_id');
 
+            const getProfile = await Profile.findById(user).populate('_id').select('-__v');
             res.send(getProfile);
         }
         catch (err) {

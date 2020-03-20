@@ -25,7 +25,7 @@ const Login = ({ login, isAuthenticated }) => {
   //Rediret if logged in
 
   if (isAuthenticated) {
-    return <Redirect to="/dashboard" />; //this will send user to dashboard upon login in but change for later.
+    return <Redirect to="/profile" />; //this will send user to dashboard upon login in but change for later.
   }
 
   return (
@@ -55,10 +55,11 @@ const Login = ({ login, isAuthenticated }) => {
             onChange={e => onChange(e)}
           />
         </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
+        <input 
+            type="submit" className="btn btn-primary" value="Login" />
       </form>
       <p className="my-1">
-        Don't have an account? <Link to="/login">Sign Up</Link>
+        Don't have an account?n <Link to="/login">Sign Up</Link>
       </p>
     </Fragment>
   );

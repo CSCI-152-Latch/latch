@@ -9,7 +9,7 @@ connectDB(); //we are now connecting to DB
 //initialize middleware
 app.use(express.json({ extended:false }));//allow us to get the data from req.body
 
-app.get("/", (req, res) => res.send("API Running"));
+// app.get("/", (req, res) => res.send("API Running"));
 
 //the routes we will be using
 app.use("/api/users", require("./routes/api/users"));
