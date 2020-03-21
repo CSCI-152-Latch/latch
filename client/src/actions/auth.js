@@ -18,7 +18,17 @@ export const loadUser = () => async dispatch => {
         setAuthToken(localStorage.token);
     }
     try {
-        const res = await axios.get("/api/profile/me");   
+        const { user } = jwt.decode(localStorage.token)
+        const res = await axios.request({
+            method: 'GET',
+            url: '/api/profile/me',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            params: {
+                user: user.id
+            }
+        });
         dispatch({
             type: USER_LOADED,
             payload: res.data
@@ -44,6 +54,7 @@ export const get_user = async () => {
                 user: user.id
             }
         });
+        
         return res.data;
     }
     catch (err) {
@@ -132,7 +143,6 @@ export const login = (email, password) => async dispatch => {
 };
 
 ///logout / clear profile
-
 export const logout = () => dispatch => {
     dispatch({ type: LOGOUT });
 };
