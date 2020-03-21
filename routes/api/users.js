@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Friend = require('../../models/Friend');
+const User = require('../../models/User');
 const auth = require('../../middleware/auth');
 
 // Type:        POST
@@ -277,5 +278,39 @@ router.get(
         }
     }
 );
+
+// Type:         GET
+// Where:        api/profile
+// Purpose:      Update user
+// Access:       Private
+router.post(
+    '/update',
+    auth,
+    async (req, res) => {
+        try {
+            const { _id, firstName, lastName, email, nickName, avatar, password, date } = req.body; 
+
+            const userUpdate = await User.findOneAndUpdate(
+                { _id:  _id}, 
+                {
+                    $set: {
+                        firstName,
+                        lastName,
+                        email,
+                        nickName,
+                        avatar,
+                        password,
+                        date
+                    }
+                },
+                { new: true }
+            );
+            return res.send(userUpdate);
+        }
+        catch (err) {
+            res.status(500).send(err);
+        }
+    }
+)
 
 module.exports = router;

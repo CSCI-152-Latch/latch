@@ -7,7 +7,8 @@ import {
     AUTH_ERROR,
     LOGIN_FAIL,
     LOGIN_SUCCESS,
-    LOGOUT
+    LOGOUT,
+    USER_UPDATED
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt from 'jsonwebtoken';
@@ -61,6 +62,38 @@ export const get_user = async () => {
         return err
     }
 }
+
+export const update_user = (user) => async dispatch => {
+    try {
+        console.log(user);
+        const res = await axios.request({
+            method: 'POST',
+            url: '/api/users/update',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                nickName: user.nickName,
+                avatar: user.avatar,
+                password: user.password,
+                date: user.data
+            }
+        })
+        console.log(res);
+        dispatch({
+            type: USER_UPDATED,
+            payload: res.data
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
 
 //Register User
 export const register = (

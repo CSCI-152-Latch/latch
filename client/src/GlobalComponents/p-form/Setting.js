@@ -1,10 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { get_user } from '../../actions/auth'
+import { get_user, update_user } from '../../actions/auth'
 
-const Setting = () => {
+const Setting = ({ update_user, isAuthenticated }) => {
     const [user, setUser] = useState({
         status: '',
         bio: '',
@@ -21,12 +21,11 @@ const Setting = () => {
         },
         experience: []
     });
-    
+
     useEffect(() => {
         const fetch_data = async () => {
             try {
                 const user = await get_user();
-                console.log('Inside: ' + user._id.avatar);
                 setUser(user);
             }
             catch (err) {
@@ -34,9 +33,16 @@ const Setting = () => {
             }
         }
         fetch_data();
-    }, []);
-    console.log('Outside: ' + user._id.avatar);
+    }, [user]);
 
+    const onChange = (value) => {
+       
+    }
+    
+    if (!isAuthenticated) {
+        return <Redirect to="/login" />
+    }
+    
     return (
         <Fragment>
             <div className='container'>
@@ -51,28 +57,42 @@ const Setting = () => {
                         <input
                             type='text'
                             placeholder={user._id.firstName}
+                            onChange={(e) => {
+                                user._id.firstName = e.target.value;
+                                update_user(user._id);
+                            }}
                         />
                         <input
                             type='text'
                             placeholder={user._id.lastName}
+                            onChange={(e) => {
+                                user._id.lastName = e.target.value
+                                update_user(user._id);
+                            }}
                         />
                     </h1>
                     <div className='large'>
                         <input
                             type='text'
                             placeholder={user._id.email} 
+                            onChange={(e) => {
+                                user._id.email = e.target.value
+                                update_user(user._id);
+                            }}
                         />
                     </div>
                     <div className='large'>
                         <input
                             type='text'
                             placeholder={user._id.password}
+                            onChange={(e) => onChange(e)}
                         />
                     </div>
                     <div className='large'>
                         <input
                             type='text'
                             placeholder={user._id.nickName}
+                            onChange={(e) => onChange(e)}
                         />
                     </div>
                     <div className='large'> Created account on {user._id.date} </div>
@@ -88,4 +108,14 @@ const Setting = () => {
     );   
 }
 
-export default Setting;
+Setting.propTypes = {
+    update_user: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+  
+
+export default connect(mapStateToProps, { update_user })(Setting);

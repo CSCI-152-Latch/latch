@@ -89,4 +89,16 @@ router.get(
     }
 );
 
+// Type:         GET
+// Where:        api/profile
+// Purpose:      Update the profile
+// Access:       Private
+router.post(
+    '/update',
+    auth,
+    async (req, res) => {
+        
+    }
+)
+
 module.exports = router;
