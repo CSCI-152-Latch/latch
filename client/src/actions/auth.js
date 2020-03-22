@@ -1,14 +1,15 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import {
-    REGISTER_SUCCESS,
-    REGISTER_FAIL,
-    USER_LOADED,
-    AUTH_ERROR,
-    LOGIN_FAIL,
-    LOGIN_SUCCESS,
-    LOGOUT,
-    USER_UPDATED
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_FAIL,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  CLEAR_PROFILE
+  USER_UPDATED
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt from 'jsonwebtoken';
@@ -177,5 +178,6 @@ export const login = (email, password) => async dispatch => {
 
 ///logout / clear profile
 export const logout = () => dispatch => {
-    dispatch({ type: LOGOUT });
+  dispatch({ type: CLEAR_PROFILE });
+  dispatch({ type: LOGOUT });
 };
