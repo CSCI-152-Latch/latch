@@ -9,14 +9,16 @@ connectDB(); //we are now connecting to DB
 //initialize middleware
 app.use(express.json({ extended:false }));//allow us to get the data from req.body
 
-app.get("/", (req, res) => res.send("API Running"));
+// app.get("/", (req, res) => res.send("API Running"));
 
 //the routes we will be using
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/posts", require("./routes/api/posts"));
+app.use("/api/chat", require("./routes/api/chat"));
 //app.use("/api/communityForum", require("./routes/api/communityForum"));
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
