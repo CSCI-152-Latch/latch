@@ -8,11 +8,10 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
-  CLEAR_PROFILE
+  CLEAR_PROFILE,
   USER_UPDATED
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
-import jwt from 'jsonwebtoken';
 
 //Load User
 export const loadUser = () => async dispatch => {
@@ -20,15 +19,11 @@ export const loadUser = () => async dispatch => {
         setAuthToken(localStorage.token);
     }
     try {
-        const { user } = jwt.decode(localStorage.token)
         const res = await axios.request({
             method: 'GET',
-            url: '/api/profile/me',
+            url: '/api/users/me',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            params: {
-                user: user.id
             }
         });
         dispatch({
@@ -45,18 +40,13 @@ export const loadUser = () => async dispatch => {
 
 export const get_user = async () => {
     try {
-        const { user } = jwt.decode(localStorage.token)
         const res = await axios.request({
             method: 'GET',
-            url: '/api/profile/me',
+            url: '/api/users/me',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            params: {
-                user: user.id
             }
         });
-        
         return res.data;
     }
     catch (err) {
@@ -66,7 +56,7 @@ export const get_user = async () => {
 
 export const update_user = (user) => async dispatch => {
     try {
-        console.log(user);
+        // console.log(user);
         const res = await axios.request({
             method: 'POST',
             url: '/api/users/update',
@@ -74,17 +64,11 @@ export const update_user = (user) => async dispatch => {
                 'Content-Type': 'application/json'
             },
             data: {
-                _id: user._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                nickName: user.nickName,
-                avatar: user.avatar,
-                password: user.password,
-                date: user.data
+                user
             }
         })
-        console.log(res);
+        // console.log('Hello');
+        console.log(res.data);
         dispatch({
             type: USER_UPDATED,
             payload: res.data

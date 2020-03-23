@@ -45,17 +45,17 @@ router.get(
     auth, 
     async(req, res) => {
         try {
-            const { user } = req.query;
-
             const isProfile = await Profile.exists(
-                { _id: user }
+                { _id: req.user.id }
             )
             if (!isProfile) {
                 return res.status(400).json({ msg: "There is no profile for this user" });
             }
 
-            const getProfile = await Profile.findById(user).populate('_id').select('-__v');
-            res.send(getProfile);
+            const getProfile = await Profile.findById(req.user.id).populate(
+                '_id', ['firstName', 'lastName', 'email', 'avatar']);
+            
+            res.json(getProfile);
         }
         catch (err) {
             res.status(500).send('Server Error');
@@ -91,10 +91,11 @@ router.get(
         catch (err) {
             res.status(500).send('Server Error');
         }
+    }
+);
 
-// module.exports = router;
 // @route     POST api/profile
-// @desc      Create or update  user profile
+// @desc      Create or update user profile
 // @access    Private
 router.post(
   "/",
@@ -118,7 +119,7 @@ router.post(
 
     //build profile object
     const profileFields = {};
-    profileFields.user = req.user.id;
+    profileFields._id = req.user.id;
     //if (company) profileFields.company = company;
     //if (website) profileFields.website = website;
     //if (location) profileFields.location = location;
@@ -138,7 +139,7 @@ router.post(
     //if (instagram) profileFields.social.instagram = instagram;
 
     try {
-      let profile = await Profile.findOne({ user: req.user.id });
+      let profile = await Profile.findOne({ _id: req.user.id });
 
       if (profile) {
         //update
@@ -184,7 +185,6 @@ router.get("/", async (req, res) => {
 // @route     get api/profile/user/:user_id ":user_id is just a place holder"
 // @desc      get profile by user id
 // @access    Public
-
 router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({

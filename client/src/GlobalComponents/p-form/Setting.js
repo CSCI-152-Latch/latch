@@ -5,22 +5,7 @@ import PropTypes from "prop-types";
 import { get_user, update_user } from '../../actions/auth'
 
 const Setting = ({ update_user, isAuthenticated }) => {
-    const [user, setUser] = useState({
-        status: '',
-        bio: '',
-        field: [],
-        _id: {
-            _id: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            nickName: '',
-            avatar: '',
-            password: '',
-            date: '',
-        },
-        experience: []
-    });
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         const fetch_data = async () => {
@@ -34,10 +19,6 @@ const Setting = ({ update_user, isAuthenticated }) => {
         }
         fetch_data();
     }, [user]);
-
-    const onChange = (value) => {
-       
-    }
     
     if (!isAuthenticated) {
         return <Redirect to="/login" />
@@ -50,58 +31,59 @@ const Setting = ({ update_user, isAuthenticated }) => {
                 <div className='profile-top bg-primary p-2'>
                     <img 
                         className='round-img my-1'
-                        src={user._id.avatar}
+                        src={user.avatar}
                         alt=''
                     />
                     <h1 className='large'> 
                         <input
                             type='text'
-                            placeholder={user._id.firstName}
+                            placeholder={user.firstName}
                             onChange={(e) => {
-                                user._id.firstName = e.target.value;
-                                update_user(user._id);
+                                user.firstName = e.target.value;
+                                console.log(user.firstName);
+                                update_user(user);
                             }}
                         />
                         <input
                             type='text'
-                            placeholder={user._id.lastName}
+                            placeholder={user.lastName}
                             onChange={(e) => {
-                                user._id.lastName = e.target.value
-                                update_user(user._id);
+                                user.lastName = e.target.value
+                                update_user(user);
                             }}
                         />
                     </h1>
                     <div className='large'>
                         <input
                             type='text'
-                            placeholder={user._id.email} 
+                            placeholder={user.email} 
                             onChange={(e) => {
-                                user._id.email = e.target.value
-                                update_user(user._id);
+                                user.email = e.target.value
+                                update_user(user);
                             }}
                         />
                     </div>
                     <div className='large'>
                         <input
                             type='text'
-                            placeholder={user._id.password}
-                            onChange={(e) => onChange(e)}
+                            placeholder={user.password}
+                            onChange={(e) => {
+                                user.password = e.target.value
+                                update_user(user);
+                            }}
                         />
                     </div>
                     <div className='large'>
                         <input
                             type='text'
-                            placeholder={user._id.nickName}
-                            onChange={(e) => onChange(e)}
+                            placeholder={user.nickName}
+                            onChange={(e) => {
+                                user.nickName = e.target.value
+                                update_user(user);
+                            }}
                         />
                     </div>
-                    <div className='large'> Created account on {user._id.date} </div>
-                    <div className='large'>
-                        <input
-                            type='text'
-                            placeholder={user.status}
-                        />
-                    </div>
+                    <div className='large'> Created account on {user.date} </div>
                 </div>
             </div>
         </Fragment>

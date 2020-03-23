@@ -288,29 +288,46 @@ router.post(
     auth,
     async (req, res) => {
         try {
-            const { _id, firstName, lastName, email, nickName, avatar, password, date } = req.body; 
+            const { user } = req.body;
 
             const userUpdate = await User.findOneAndUpdate(
-                { _id:  _id}, 
+                { _id:  req.user.id}, 
                 {
-                    $set: {
-                        firstName,
-                        lastName,
-                        email,
-                        nickName,
-                        avatar,
-                        password,
-                        date
-                    }
+                    $set: user
                 },
                 { new: true }
             );
-            return res.send(userUpdate);
+            return res.json(userUpdate);
         }
         catch (err) {
             res.status(500).send(err);
         }
     }
 )
+
+// @route     POST api/user
+// @desc      Get user data
+// @access    Private
+router.get(
+    '/me', 
+    auth, 
+    async(req, res) => {
+        try {
+            const isUser = await User.exists(
+                { _id: req.user.id }
+            )
+            if (!isUser) {
+                return res.status(400).json({ msg: "You dont exist in this community" });
+            }
+
+            const getUser = await User.findById(req.user.id);
+            
+            res.json(getUser);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
+    }
+);
 
 module.exports = router;
