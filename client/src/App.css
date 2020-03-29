@@ -408,6 +408,11 @@
   .profile-exp {
     grid-area: exp;
   }
+
+  .profile-size {
+    width: 100px;
+    height: 100px;
+  }
   
   .profile-edu {
     grid-area: edu;
