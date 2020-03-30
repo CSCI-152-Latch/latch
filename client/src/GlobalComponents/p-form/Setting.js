@@ -18,7 +18,7 @@ const Setting = ({ update_user, isAuthenticated }) => {
             }
         }
         fetch_data();
-    }, [user]);
+    }, []);
     
     if (!isAuthenticated) {
         return <Redirect to="/login" />

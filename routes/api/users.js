@@ -387,12 +387,20 @@ router.post(
     async (req, res) => {
         try {
             const userID = req.user.id;
-            const userData = req.body;
+            const { firstName, lastName, email, nickName, avatar, password, date } = req.body; 
 
             const userUpdate = await User.findOneAndUpdate(
                 { _id:  userID}, 
                 {
-                    $set: userData
+                    $set: {
+                        firstName,
+                        lastName,
+                        email,
+                        nickName,
+                        avatar,
+                        password,
+                        date
+                    }
                 },
                 { new: true }
             );

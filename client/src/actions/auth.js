@@ -71,7 +71,13 @@ export const update_user = (user) => async dispatch => {
                 'Content-Type': 'application/json'
             },
             data: {
-                user
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                nickName: user.nickName,
+                avatar: user.avatar,
+                password: user.password,
+                date: user.data
             }
         })
         dispatch({
