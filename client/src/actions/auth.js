@@ -181,6 +181,28 @@ export const get_friends = async () => {
     }
 }
 
+// Get Chat
+export const get_chats = async () => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/chat/view',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+}
+
 // Add a user
 export const add_user = (userID) => async dispatch => {
     if (localStorage.token) {
@@ -301,8 +323,31 @@ export const cancel_user = (userID) => async dispatch => {
             data: {
                 currRequester: userID
             }
-        })
+        });
         
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const create_chat = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/chat/create',
+            data: {
+                users: userID
+            }
+        });
+
         //DISPATCH
     }
     catch (err) {

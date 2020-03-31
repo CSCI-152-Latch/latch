@@ -7,20 +7,24 @@ import {
     get_spending, 
     get_requesting, 
     get_friends, 
+    get_chats,
     add_user, 
     accept_user, 
     decline_user, 
     delete_user, 
-    cancel_user 
+    cancel_user,
+    create_chat 
 } from '../../actions/auth';
 
-const Social = ({ add_user, accept_user, decline_user, delete_user, cancel_user, isAuthenticated }) => {
+const Social = ({ add_user, accept_user, decline_user, delete_user, cancel_user, create_chat, isAuthenticated }) => {
     const [users, setUsers] = useState([]);
     const [spending, setSpending] = useState([]);
     const [requesting, setRequesting] = useState([]);
     const [friends, setFriends] = useState([]);
+    const [chats, setChats] = useState([]);
 
     const [isUpdate, setUpdate] = useState(false);
+
     useEffect(() => {
         const fetch_data = async () => {
             try {
@@ -35,8 +39,9 @@ const Social = ({ add_user, accept_user, decline_user, delete_user, cancel_user,
 
                 const friends = await get_friends();
                 setFriends(friends);
-                
-                console.log('Render!');
+
+                const chats = await get_chats();
+                setChats(chats);
             }
             catch (err) {
                 console.log(err);
@@ -92,6 +97,7 @@ const Social = ({ add_user, accept_user, decline_user, delete_user, cancel_user,
                                         onClick={() => {
                                             const fetch_data = async () => {
                                                 await accept_user(user._id);
+                                                await create_chat(user._id);
                                                 setUpdate(!isUpdate);
                                             }
                                             fetch_data();
@@ -166,6 +172,18 @@ const Social = ({ add_user, accept_user, decline_user, delete_user, cancel_user,
                     })
                 }
             </ul>
+            <ul>
+                Chat List
+                {
+                    chats.map((chat) => {
+                        return (
+                            <li key={chat._id}>
+                                {chat.users.length}
+                            </li>
+                        )
+                    })
+                }
+            </ul>
         </Fragment>
     )
 }
@@ -176,6 +194,7 @@ Social.propTypes = {
     decline_user: PropTypes.func.isRequired,
     delete_user: PropTypes.func.isRequired,
     cancel_user: PropTypes.func.isRequired,
+    create_chat: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool
 }
 
@@ -183,4 +202,4 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { add_user, accept_user, decline_user, delete_user, cancel_user })(Social);
+export default connect(mapStateToProps, { add_user, accept_user, decline_user, delete_user, cancel_user, create_chat})(Social);
