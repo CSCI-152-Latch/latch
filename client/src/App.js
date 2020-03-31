@@ -5,7 +5,8 @@ import Landing from "./GlobalComponents/layout/Landing";
 import Login from "./GlobalComponents/auth/Login";
 import Register from "./GlobalComponents/auth/Register";
 import Alert from "./GlobalComponents/layout/Alert";
-import Setting from './GlobalComponents/p-form/Setting'
+// import Setting from './GlobalComponents/p-form/Setting'
+import Setting from './setting/scene';
 import Dashboard from "./GlobalComponents/dashboard/Dashboard";
 import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
 import PrivateRoute from "./GlobalComponents/routing/PrivateRoute";
