@@ -1,16 +1,16 @@
 import axios from 'axios';
 import Type from './type';
 
-export const update_user = async (user) => {
+export const update_user = async (userField, userData) => {
     try {
         const res = await axios.request({
             method: 'POST',
-            url: '/api/users/update',
+            url: '/api/setting/update',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: {
-                user
+                [userField]: userData
             }
         })
 

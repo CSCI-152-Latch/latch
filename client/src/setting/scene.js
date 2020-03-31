@@ -1,11 +1,18 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { update_user } from './redux/dispatch';
-import { get_user } from './utils/functions';
+import { get_field } from './utils/functions';
 import { Redirect } from "react-router-dom";
 
+import Text from './components/Text';
+import Button from './components/Button';
+
+import './style.css'
+
 const Setting = () => {
-    const [user, setUser] = useState({});
+    const [user, set_user] = useState({});
+    const [isEdit, set_edit] = useState(true);
+    const [isUpdate, set_update] = useState(false);
 
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -13,15 +20,15 @@ const Setting = () => {
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const user = await get_user();
-                setUser(user);
+                const getUser = await get_field();
+                set_user(getUser);
             }
             catch (err) {
                 alert(err);
             }
         }
         fetch_data();
-    });
+    }, [isUpdate, isEdit]);
     
     if (!isAuthenticated) {
         return <Redirect to="/login" />
@@ -30,67 +37,97 @@ const Setting = () => {
     return (
         <Fragment>
             <div className='container profile-top bg-primary p-2'>
-                {/* This is the profile */}
-                    <img 
-                        className='round-img my-1'
-                        src={user.avatar}
-                        alt=''
-                    />
-                    <h1 className='large'> 
-                        <input
-                            type='text'
-                            placeholder={user.firstName}
-                            onChange={(e) => {
-                                const fetch_data = async () => {
-                                    user.firstName = e.target.value;
-                                    dispatch(await update_user(user));
-                                }
-                                fetch_data();
-                            }}
-                        />
-                        <input
-                            type='text'
-                            placeholder={user.lastName}
-                            onChange={(e) => {
-                                user.lastName = e.target.value
-                                dispatch(update_user(user));
-                            }}
-                        />
-                    </h1>
-                    <div className='large'>
-                        <input
-                            type='text'
-                            placeholder={user.email} 
-                            onChange={(e) => {
-                                user.email = e.target.value
-                                dispatch(update_user(user));
-                            }}
-                        />
-                    </div>
-                    <div className='large'>
-                        <input
-                            type='text'
-                            placeholder={user.password}
-                            onChange={(e) => {
-                                user.password = e.target.value
-                                dispatch(update_user(user));
-                            }}
-                        />
-                    </div>
-                    <div className='large'>
-                        <input
-                            type='text'
-                            placeholder={user.nickName}
-                            onChange={(e) => {
-                                const fetch_data = async () => {
-                                    user.nickName = e.target.value
-                                    dispatch(await update_user(user));
-                                }
-                                fetch_data();
-                            }}
-                        />
-                    </div>
-                    <div className='large'> Created account on {user.date} </div>
+                <img 
+                    className='round-img my-1'
+                    src = { user.avatar }
+                    alt = ''
+                />
+                <Text
+                    className = 'large'
+                    type = 'text'
+                    placeHolder = { user.firstName }
+                    onChange = {(e) => {
+                        const fetch_data = async () => {
+                            const newFirstName = e.target.value;
+                            const newDispatch = await update_user('firstName', newFirstName);
+                            dispatch(newDispatch);
+                            set_update(!isUpdate);
+                        }
+                        fetch_data();
+                    }}
+                    readOnly = { isEdit }
+                />
+                <Text
+                    className = 'large'
+                    type = 'text'
+                    placeHolder = { user.lastName }
+                    onChange = {(e) => {
+                        const fetch_data = async () => {
+                            const newLastName = e.target.value;
+                            const newDispatch = await update_user('lastName', newLastName);
+                            dispatch(newDispatch);
+                            set_update(!isUpdate);
+                        }
+                        fetch_data();
+                    }}
+                    readOnly = { isEdit }
+                />
+                <Text
+                    className = 'large'
+                    type = 'text'
+                    placeHolder = { user.email }
+                    onChange = {(e) => {
+                        const fetch_data = async () => {
+                            const newEmail = e.target.value;
+                            const newDispatch = await update_user('email', newEmail);
+                            dispatch(newDispatch);
+                            set_update(!isUpdate);
+                        }
+                        fetch_data();
+                    }}
+                    readOnly = { isEdit }
+                />
+                <Text
+                    className = 'large'
+                    type = 'text'
+                    placeHolder = { user.password }
+                    onChange = {(e) => {
+                        const fetch_data = async () => {
+                            const newPassword = e.target.value;
+                            const newDispatch = await update_user('password', newPassword);
+                            dispatch(newDispatch);
+                            set_update(!isUpdate);
+                        }
+                        fetch_data();
+                    }}
+                    readOnly = { isEdit }
+                />
+                <Text
+                    className = 'large'
+                    type = 'text'
+                    placeHolder = { user.nickName }
+                    onChange = {(e) => {
+                        const fetch_data = async () => {
+                            const newNickName = e.target.value;
+                            const newDispatch = await update_user('nickName', newNickName);
+                            dispatch(newDispatch);
+                            set_update(!isUpdate);
+                        }
+                        fetch_data();
+                    }}
+                    readOnly = { isEdit }
+                />
+                <div className='large'> 
+                    Created account on {user.date} 
+                </div>
+                <Button
+                    className = 'button-size'
+                    type = 'button'
+                    placeHolder = 'Edit!'
+                    onClick = {() => {
+                        set_edit(!isEdit);
+                    }}
+                />
             </div>
         </Fragment>
     );   
