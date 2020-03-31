@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_UPDATED, AUTH_ERROR } from './type';
+import Type from './type';
 
 export const update_user = async (user) => {
     try {
@@ -15,13 +15,13 @@ export const update_user = async (user) => {
         })
 
         return {
-            type: USER_UPDATED,
+            type: Type.USER_UPDATED,
             payload: res.data
         };
     }
     catch (err) {
         return {
-            type: AUTH_ERROR
+            type: Type.AUTH_ERROR
         };
     }
 }

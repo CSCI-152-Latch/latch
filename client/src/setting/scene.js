@@ -29,9 +29,8 @@ const Setting = () => {
     
     return (
         <Fragment>
-            <div className='container'>
+            <div className='container profile-top bg-primary p-2'>
                 {/* This is the profile */}
-                <div className='profile-top bg-primary p-2'>
                     <img 
                         className='round-img my-1'
                         src={user.avatar}
@@ -92,7 +91,6 @@ const Setting = () => {
                         />
                     </div>
                     <div className='large'> Created account on {user.date} </div>
-                </div>
             </div>
         </Fragment>
     );   
