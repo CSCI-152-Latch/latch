@@ -2,9 +2,11 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { get_user } from '../../actions/chat';
+import { get } from "mongoose";
 
 const Chat = ({chat}) => {
-    const [title, setTitle] = useState('');
+    // const [title, setTitle] = useState('');
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
 
@@ -12,7 +14,10 @@ const Chat = ({chat}) => {
 
     useEffect(() => {
         const fetch_data = async () => {
-
+            for (var i = 0; i < chat.users.length; ++i) {
+                const user = await get_user(chat.users[i]);
+                setUsers([...users, user]);
+            }
         }
 
         fetch_data();
@@ -21,9 +26,6 @@ const Chat = ({chat}) => {
 
     return (
         <Fragment>
-            <div>
-                {title}
-            </div>
             <ul>
                 <h1>
                     Users

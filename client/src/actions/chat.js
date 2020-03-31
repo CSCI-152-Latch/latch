@@ -1,9 +1,7 @@
 import axios from "axios";
-import { setAlert } from "./alert";
-
 import setAuthToken from "../utils/setAuthToken";
 
-const get_user = (userID) => {
+export const get_user = (userID) => {
     if (localStorage.token) {
         setAuthToken(localStorage.token);
     }
