@@ -433,6 +433,26 @@ router.get(
     }
 );
 
+// @route     POST api/users/others
+// @desc      Get other user data
+// @access    Private
+router.get(
+    '/others', 
+    auth, 
+    async(req, res) => {
+        try {
+            const { userID } = req.query;
+
+            const getUser = await User.findById(userID);
+            
+            res.json(getUser);
+        }
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
+    }
+);
+
 // @route     POST api/users/all
 // @desc      Get all user data beside the owner (Adding friend purpose)
 // @access    Private
