@@ -20,7 +20,6 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case USER_LOADED:
-    case USER_UPDATED:
       return {
         ...state,
         isAuthenticated: true,
