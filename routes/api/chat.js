@@ -10,7 +10,7 @@ const Chat = require('../../models/Chat');
 // Access:       Private
 router.get('/view', auth, async (req, res) => {
     try {
-        const { user } = req.body;
+        const user = req.user.id;
 
         const chats = await Chat.find(
             { users: user }
@@ -24,18 +24,20 @@ router.get('/view', auth, async (req, res) => {
 })
 
 // Type:         POST
-// Where:        api/chat
+// Where:        api/chat/create
 // Purpose:      Create a chat
 // Access:       Private
 router.post(
-    '/group', 
+    '/create', 
     auth, 
     async (req, res) => {
         try {
-            const users = req.body
+
+            const user = req.user.id;
+            const { users } = req.body
             
             const chat = await Chat.create(
-                { users: users }
+                { users: [user, users] }
             );
 
             res.send(chat)

@@ -5,7 +5,6 @@ import Landing from "./GlobalComponents/layout/Landing";
 import Login from "./GlobalComponents/auth/Login";
 import Register from "./GlobalComponents/auth/Register";
 import Alert from "./GlobalComponents/layout/Alert";
-// import Setting from './GlobalComponents/p-form/Setting'
 import Setting from './setting/scene';
 import Dashboard from "./GlobalComponents/dashboard/Dashboard";
 import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
@@ -39,6 +38,7 @@ const App = () => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path='/setting' component={Setting} />
+              <Route exact path='/social' component={Social} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact

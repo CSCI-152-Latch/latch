@@ -38,6 +38,271 @@ export const loadUser = () => async dispatch => {
     }
 };
 
+// Get all the user
+export const get_all_user = async () => {
+
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/users/all',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+} 
+
+// Get all spending user
+export const get_spending = async () => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/users/spending',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+} 
+
+// Get requester list
+export const get_requesting = async () => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/users/request',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+} 
+
+// Get friends
+export const get_friends = async () => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/users/view',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+}
+
+// Get Chat
+export const get_chats = async () => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: 'api/chat/view',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return res.data;
+    }
+    catch (err) {
+        return err;
+    }
+}
+
+// Add a user
+export const add_user = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = axios.request({
+            method: 'POST',
+            url: 'api/users/add',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                newSpender: userID
+            }
+        });
+
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const accept_user = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/users/accept',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                currRequester: userID
+            }
+        })
+        
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const decline_user = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/users/decline',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                currRequester: userID
+            }
+        })
+        
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const delete_user = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/users/delete',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                currRequester: userID
+            }
+        })
+        
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const cancel_user = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/users/cancel',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                currRequester: userID
+            }
+        });
+        
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
+export const create_chat = (userID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/chat/create',
+            data: {
+                users: userID
+            }
+        });
+
+        //DISPATCH
+    }
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
+}
+
 //Register User
 export const register = (
     {
