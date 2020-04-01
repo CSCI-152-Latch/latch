@@ -38,60 +38,6 @@ export const loadUser = () => async dispatch => {
     }
 };
 
-export const get_user = async () => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-
-    try {
-        const res = await axios.request({
-            method: 'GET',
-            url: '/api/users/me',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return res.data;
-    }
-    catch (err) {
-        return err
-    }
-}
-
-export const update_user = (user) => async dispatch => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-
-    try {
-        const res = await axios.request({
-            method: 'POST',
-            url: '/api/users/update',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                nickName: user.nickName,
-                avatar: user.avatar,
-                password: user.password,
-                date: user.data
-            }
-        })
-        dispatch({
-            type: USER_UPDATED,
-            payload: res.data
-        });
-    }
-    catch (err) {
-        dispatch({
-            type: AUTH_ERROR
-        });
-    }
-}
-
 // Get all the user
 export const get_all_user = async () => {
 
