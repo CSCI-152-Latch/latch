@@ -14,11 +14,13 @@ export default (state = initialState, action) => {
         case Type.CANCEL_REQUEST:
             return {
                 ...state,
-                users: payload
+                users: payload,
+                error: null
             }
         case Type.ERROR:
             return {
                 ...state,
+                users: null,
                 error: payload
             }
         default: 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Get the list of requesters to current user
+// Get the list of relationhip to current user
 export const get_user_relation = async (type) => {
     try {
         const res = await axios.request({
