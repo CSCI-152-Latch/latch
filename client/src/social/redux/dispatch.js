@@ -43,7 +43,7 @@ export const add_user = (userID) => async dispatch => {
 
         const res = axios.request({
             method: 'POST',
-            url: 'api/users/add',
+            url: 'api/social/add',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -70,7 +70,7 @@ export const accept_user = (userID) => async dispatch => {
     try {
         const res = await axios.request({
             method: 'POST',
-            url: 'api/users/accept',
+            url: 'api/social/accept',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -97,7 +97,7 @@ export const decline_user = (userID) => async dispatch => {
     try {
         const res = await axios.request({
             method: 'POST',
-            url: 'api/users/decline',
+            url: 'api/social/decline',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -124,7 +124,7 @@ export const delete_user = (userID) => async dispatch => {
     try {
         const res = await axios.request({
             method: 'POST',
-            url: 'api/users/delete',
+            url: 'api/social/delete',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -151,7 +151,7 @@ export const create_chat = (userID) => async dispatch => {
     try {
         const res = await axios.request({
             method: 'POST',
-            url: 'api/chat/create',
+            url: 'api/social/create',
             data: {
                 users: userID
             }
