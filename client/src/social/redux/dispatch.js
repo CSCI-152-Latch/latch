@@ -21,7 +21,10 @@ export const cancel_user = async (userID) => {
             }
         });
         
-        //DISPATCH
+        return {
+            type: Type.CANCEL_REQUEST,
+            paylaod: res.data
+        }
     }
     catch (err) {
         return {

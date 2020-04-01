@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Requesters = (prop) => {
-    const { users, className } = prop;
+    const { users, className, onCancel } = prop;
 
     return (
         <ul>
@@ -12,11 +12,13 @@ const Requesters = (prop) => {
                         <div>
                             <img src = { user.avatar } className = { className }/>
                         </div>
-                        {/* <input 
-                            type='button'
-                            placeholder='Cancel'
-                            onClick={ cancel }
-                        /> */}
+                        <input 
+                            type = 'button'
+                            placeholder = 'Cancel'
+                            onClick = {() => {
+                                onCancel(user._id) 
+                            }}  
+                        />
                     </li>
                 )
             })}

@@ -3,7 +3,8 @@ import Type from './type';
 const initialState = {
     token: localStorage.getItem('token'),
     isAuth: false,
-    user: null
+    user: null,
+    error: null
 };
 
 export default (state = initialState, action) => {
@@ -19,7 +20,7 @@ export default (state = initialState, action) => {
         case Type.ERROR:
             return {
                 ...state,
-                user: payload
+                error: payload
             };
         default:
             return state;
