@@ -1,7 +1,7 @@
-import React, { Fragment, useState, useEffect, useRef, useCallback } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { update_user } from './redux/dispatch';
-import { get_field } from './utils/functions';
+import { get_field } from './util/functions';
 import { Redirect } from "react-router-dom";
 
 import Text from './components/Text';

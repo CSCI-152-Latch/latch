@@ -8,7 +8,7 @@ const Button = (prop) => {
             <input
                 className = { className }
                 type = { type } 
-                placeholder = 'Edit!'
+                placeholder = { placeHolder }
                 onClick = { onClick }
             />
         </div>
