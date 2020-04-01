@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Text = (prop) => {
-    const { className, type, placeHolder, onChange, readOnly } = prop
+    const { className, type, placeHolder, onChange, readOnly } = prop;
 
     return (
         <div>

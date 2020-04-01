@@ -21,13 +21,13 @@ export const update_user = async (userField, userData) => {
         })
 
         return {
-            type: Type.USER_UPDATE_SUCCESS,
+            type: Type.UPDATE_USER,
             payload: res.data
         };
     }
     catch (err) {
         return {
-            type: Type.USER_UPDATE_FAIL,
+            type: Type.ERROR,
             payload: err
         };
     }

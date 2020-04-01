@@ -6,13 +6,16 @@ const FriendSchema = mongoose.Schema({
         ref: 'users'
     },
     friends: {
-        type: Array
+        type: [String],
+        ref: 'users'
     },
-    requesting: {
-        type: Array
+    requesters: {
+        type: [String],
+        ref: 'users'
     },
-    spending: {
-        type: Array
+    responders: {
+        type: [String],
+        ref: 'users'
     }
 });
 

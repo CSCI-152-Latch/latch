@@ -1,6 +1,6 @@
 const type = {
-    USER_UPDATE_FAIL: "USER_UPDATED_FAIL",
-    USER_UPDATE_SUCCESS: "USER_UPDATE_SUCCESS"
+    UPDATE_USER: 'UPDATE_USER',
+    ERROR: 'ERROR'
 }
 
 export default type;

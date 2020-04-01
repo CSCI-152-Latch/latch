@@ -1,15 +1,15 @@
 const express = require("express");
 
-const connectDB = require("./config/db"); //
+const connectDB = require("./config/db");
 
 const app = express();
 
-connectDB(); //we are now connecting to DB
+// Connect to MongoDB
+connectDB(); 
 
-//initialize middleware
-app.use(express.json({ extended:false }));//allow us to get the data from req.body
+// Initialize middleware and allow us to get the data from request body 
+app.use(express.json({ extended:false }));
 
-// app.get("/", (req, res) => res.send("API Running"));
 
 //the routes we will be using
 app.use("/api/users", require("./routes/api/users"));
@@ -18,6 +18,7 @@ app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/posts", require("./routes/api/posts"));
 app.use("/api/chat", require("./routes/api/chat"));
 app.use("/api/setting", require("./routes/api/setting"));
+app.use('/api/social', require('./routes/api/social'));
 //app.use("/api/communityForum", require("./routes/api/communityForum"));
 
 const PORT = process.env.PORT || 5000;

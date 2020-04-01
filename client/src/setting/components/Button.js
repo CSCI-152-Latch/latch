@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Button = (prop) => {
-    const { className, type, placeHolder, onClick } = prop
+    const { className, type, placeHolder, onClick } = prop;
     
     return (
         <div>
