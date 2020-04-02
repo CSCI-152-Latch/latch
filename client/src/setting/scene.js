@@ -11,6 +11,7 @@ import './style.css'
 
 const Setting = () => {
     const [user, set_user] = useState({});
+    
     const [isEdit, set_edit] = useState(true);
     const [isUpdate, set_update] = useState(false);
 

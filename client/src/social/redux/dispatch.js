@@ -22,14 +22,14 @@ export const cancel_user = async (userID) => {
         });
         
         return {
-            type: Type.CANCEL_REQUEST,
-            paylaod: res.data
+            type: Type.CANCEL_USER,
+            payload: res.data
         }
     }
     catch (err) {
         return {
             type: Type.ERROR,
-            paylaod: err
+            payload: err
         }
     }
 }
@@ -62,12 +62,12 @@ export const add_user = (userID) => async dispatch => {
     }
 }
 
-export const accept_user = (userID) => async dispatch => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-    
+export const accept_user = async (userID) => {
     try {
+        if (localStorage.token) {
+            setAuthToken(localStorage.token);
+        }
+
         const res = await axios.request({
             method: 'POST',
             url: 'api/social/accept',
@@ -79,22 +79,25 @@ export const accept_user = (userID) => async dispatch => {
             }
         })
         
-        //DISPATCH
+        return {
+            type: Type.ACCEPT_USER,
+            payload: res.data
+        }
     }
     catch (err) {
         return {
             type: Type.ERROR,
-            paylaod: err
+            payload: err
         }
     }
 }
 
-export const decline_user = (userID) => async dispatch => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-    
+export const decline_user = async (userID) => {
     try {
+        if (localStorage.token) {
+            setAuthToken(localStorage.token);
+        }
+
         const res = await axios.request({
             method: 'POST',
             url: 'api/social/decline',
@@ -106,22 +109,25 @@ export const decline_user = (userID) => async dispatch => {
             }
         })
         
-        //DISPATCH
+        return {
+            type: Type.DECLINE_USER,
+            payload: res.data
+        }
     }
     catch (err) {
         return {
             type: Type.ERROR,
-            paylaod: err
+            payload: err
         }
     }
 }
 
 export const delete_user = (userID) => async dispatch => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-    
     try {
+        if (localStorage.token) {
+            setAuthToken(localStorage.token);
+        }
+        
         const res = await axios.request({
             method: 'POST',
             url: 'api/social/delete',
@@ -138,7 +144,7 @@ export const delete_user = (userID) => async dispatch => {
     catch (err) {
         return {
             type: Type.ERROR,
-            paylaod: err
+            payload: err
         }
     }
 }
@@ -162,7 +168,7 @@ export const create_chat = (userID) => async dispatch => {
     catch (err) {
         return {
             type: Type.ERROR,
-            paylaod: err
+            payload: err
         }
     }
 }

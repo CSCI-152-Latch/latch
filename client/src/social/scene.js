@@ -1,17 +1,17 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { cancel_user } from './redux/dispatch';
+import { cancel_user, accept_user, decline_user } from './redux/dispatch';
 import { get_user_relation } from './utils/functions';
 import { Redirect } from "react-router-dom";
 
-import Requesters from './components/Requesters';
-import Responders from './components/Responders';
+import Requester from './components/Requester';
+import Responder from './components/Responder';
 
 const Social = () => {
     const [requesters, set_requesters] = useState([]);
     const [responders, set_responders] = useState([]) 
 
-    const [isUpate, set_update] = useState(false);
+    const [isUpdate, set_update] = useState(false);
 
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -38,26 +38,36 @@ const Social = () => {
 
     return (
         <Fragment>  
-            <Requesters 
+            <Requester
                 users = { requesters }
                 className = 'profile-size'
                 onCancel = {(id) => {
                     const fetch_data = async () => {
                         const newDispatch = await cancel_user(id);
                         dispatch(newDispatch)
-                        set_update(!isUpate);
+                        set_update(!isUpdate);
                     }
                     fetch_data();
                 }}
             />
-            <Responders
+            <Responder
                 user = { responders }
                 className = 'profile-size'
                 onAccept = {(id) => {
-
+                    const fetch_data = async () => {
+                        const newDispatch = await accept_user(id);
+                        dispatch(newDispatch);
+                        set_update(!isUpdate);
+                    }
+                    fetch_data()
                 }}
                 onDecline = {(id) => {
-
+                    const fetch_data = async () => {
+                        const newDispatch = await decline_user(id);
+                        dispatch(newDispatch);
+                        set_update(!isUpdate);
+                    }
+                    fetch_data();
                 }}
             />
         </Fragment>

@@ -15,8 +15,7 @@ export const get_user_relation = async (type) => {
     catch (err) {
         return err;
     }
-} 
-
+}
 
 // Get all users 
 export const get_all_user = async () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Requesters = (prop) => {
+const Requester = (prop) => {
     const { users, className, onCancel } = prop;
 
     return (
@@ -26,4 +26,4 @@ const Requesters = (prop) => {
     )
 }
 
-export default Requesters;
+export default Requester;
