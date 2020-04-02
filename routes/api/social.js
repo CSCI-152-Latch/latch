@@ -146,7 +146,9 @@ router.get(
                 path: 'responders',
                 model: 'users'
             });
-            res.json(getResponders);
+
+            const { responders } = getResponders;
+            res.json(responders);
         }
         catch (err) {
             res.status(500).json(err);
@@ -176,7 +178,9 @@ router.get(
                 path: 'friends',
                 model: 'users'
             });
-            res.json(getFriends);
+
+            const { friends } = getFriends;
+            res.json(friends);
         }
         catch (err) {
             res.status(500).json(err);

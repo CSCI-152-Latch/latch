@@ -35,7 +35,7 @@ export const cancel_user = async (userID) => {
 }
 
 // Add a new user
-export const add_user = (userID) => async dispatch => {
+export const add_user = async (userID) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -48,11 +48,14 @@ export const add_user = (userID) => async dispatch => {
                 'Content-Type': 'application/json'
             },
             data: {
-                newSpender: userID
+                newResponder: userID
             }
         });
 
-        //DISPATCH
+        return {
+            type: Type.ADD_USER,
+            payload: res.data
+        }
     }
     catch (err) {
         return {
@@ -122,7 +125,7 @@ export const decline_user = async (userID) => {
     }
 }
 
-export const delete_user = (userID) => async dispatch => {
+export const delete_user = async (userID) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -135,11 +138,14 @@ export const delete_user = (userID) => async dispatch => {
                 'Content-Type': 'application/json'
             },
             data: {
-                currRequester: userID
+                currResponder: userID
             }
         })
         
-        //DISPATCH
+        return {
+            type: Type.DELETE_USER,
+            payload: res.data
+        }
     }
     catch (err) {
         return {

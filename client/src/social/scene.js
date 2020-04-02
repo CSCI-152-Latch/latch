@@ -1,15 +1,19 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { cancel_user, accept_user, decline_user } from './redux/dispatch';
+import { add_user, cancel_user, accept_user, decline_user, delete_user } from './redux/dispatch';
 import { get_user_relation } from './utils/functions';
 import { Redirect } from "react-router-dom";
 
-import Requester from './components/Requester';
-import Responder from './components/Responder';
+import Mutual       from './components/Mutual'
+import Friend       from './components/Friend';
+import Responder    from './components/Responder';
+import Requester    from './components/Requester';
 
 const Social = () => {
+    const [mutuals, set_mutual] = useState([]);
+    const [friends, set_friends] = useState([]);
+    const [responders, set_responders] = useState([]); 
     const [requesters, set_requesters] = useState([]);
-    const [responders, set_responders] = useState([]) 
 
     const [isUpdate, set_update] = useState(false);
 
@@ -19,18 +23,24 @@ const Social = () => {
     useEffect(() => {
         const fetch_data = async () => {
             try {
-                const requesters = await get_user_relation('requesters');
+                const mutuals = await get_user_relation('users/mutuals');
+                set_mutual(mutuals);
+
+                const requesters = await get_user_relation('social/requesters');
                 set_requesters(requesters);
 
-                const responders = await get_user_relation('responders');
+                const responders = await get_user_relation('social/responders');
                 set_responders(responders);
+
+                const friends = await get_user_relation('social/friends')
+                set_friends(friends);
             }
             catch (err) {
                 alert(err);
             }
         }
         fetch_data();
-    }, [isUpate])
+    }, [isUpdate])
 
     if (!isAuthenticated) {
         return <Redirect to="/login" />
@@ -38,8 +48,32 @@ const Social = () => {
 
     return (
         <Fragment>  
+            <Mutual
+                users = {mutuals}
+                className = 'profile-size'
+                onAdd = {(id) => {
+                    const fetch_data = async () => {
+                        const newDispatch = await add_user(id);
+                        dispatch(newDispatch);
+                        set_update(!isUpdate);
+                    }
+                    fetch_data();
+                }}
+            />
+            <Friend
+                users = {friends}
+                className = 'profile-size'
+                onDelete = {(id) => {
+                    const fetch_data = async () => {
+                        const newDispatch = await delete_user(id);
+                        dispatch(newDispatch);
+                        set_update(!isUpdate);
+                    }
+                    fetch_data();
+                }}
+            />
             <Requester
-                users = { requesters }
+                users = {requesters}
                 className = 'profile-size'
                 onCancel = {(id) => {
                     const fetch_data = async () => {
@@ -51,7 +85,7 @@ const Social = () => {
                 }}
             />
             <Responder
-                user = { responders }
+                users = {responders}
                 className = 'profile-size'
                 onAccept = {(id) => {
                     const fetch_data = async () => {

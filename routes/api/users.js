@@ -48,26 +48,28 @@ router.get(
 // @desc      Get all user data beside the owner (Adding friend purpose)
 // @access    Private
 router.get(
-    '/all',
-    auth,
+    '/mutuals', 
+    auth, 
     async (req, res) => {
         try {
             const userID = req.user.id;
 
-            const getUsers = await User.find(
+            const getMutuals = await User.find(
                 {
                     _id: {
                         $ne: userID
                     }
-                }
-            ).select('-password -email -__v -date').limit(5);
-        
-            res.json(getUsers);
+                },
+                { firstName: 1, lastName: 1, avatar: 1 }
+            );
+            res.json(getMutuals);
         }
         catch (err) {
-            res.status(500).send('Server Error');
+            res.status(500).json(err);
         }
     }
-)
+);
+
+
 
 module.exports = router;
