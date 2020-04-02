@@ -105,7 +105,7 @@ router.post(
       check("status", "status is required")
         .not()
         .isEmpty(),
-        check("fields", "field is required")
+      check("fields", "field is required")
         .not()
         .isEmpty()
     ]
@@ -126,9 +126,9 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     //if (githubusername) profileFields.githubusername = githubusername;
-      if (fields) {
-        profileFields.fields = fields.split(",").map(field => field.trim());
-      }
+    if (fields) {
+      profileFields.fields = fields.split(",").map(field => field.trim());
+    }
 
     //build social object
     profileFields.social = {};
@@ -156,7 +156,6 @@ router.post(
       profile = new Profile(profileFields);
       await profile.save();
       res.json(profile);
-
     } catch (err) {
       console.error(err.message);
       res.status(500).send("server error");
@@ -175,7 +174,7 @@ router.get("/", async (req, res) => {
       "lastName",
       "email",
       "avatar"
-    ]); 
+    ]);
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
@@ -199,7 +198,8 @@ router.get("/user/:user_id", async (req, res) => {
   } catch (err) {
     console.error(err.message);
 
-    if (err.kind == "ObjectId") {//"objectID is a kind of error so we are checking if the object id is messed up"
+    if (err.kind == "ObjectId") {
+      //"objectID is a kind of error so we are checking if the object id is messed up"
       return res.status(400).json({ msg: "Profile not found" });
     }
 
@@ -214,8 +214,8 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     //@to do - remove users posts
-    //possibly might do this
-    
+    //possibly might do this probably not ?
+    //await Post.deleteMany({user: req.user.id})///make sure to include post model up top.
     //remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
     //remove user
