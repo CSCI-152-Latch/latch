@@ -120,7 +120,7 @@ export const createProfile = (
   }
 };
 
-// Add Experience
+// Add Experience (history allows for redirect back to previous page)
 export const addExperience = (formData, history) => async dispatch => {
   try {
     const config = {
@@ -152,6 +152,9 @@ export const addExperience = (formData, history) => async dispatch => {
     });
   }
 };
+
+//add hobbies
+//delete hobbies
 
 // Add Education
 export const addEducation = (formData, history) => async dispatch => {

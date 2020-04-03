@@ -33,7 +33,7 @@ const ProfileSchema = mongoose.Schema({
             current: {
                 type: Boolean
             },
-            decription: {
+            description: {
                 type: String
             },
         }
