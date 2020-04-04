@@ -4,7 +4,7 @@ import Type from './type';
 import setAuthToken from '../../utils/setAuthToken';
 
 // Requester cancel friend request to the current responder
-export const cancel_user = async (userID) => {
+export const cancel_user = async (id) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -17,7 +17,7 @@ export const cancel_user = async (userID) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                currResponder: userID
+                currResponder: id
             }
         });
         
@@ -35,7 +35,7 @@ export const cancel_user = async (userID) => {
 }
 
 // Add a new user
-export const add_user = async (userID) => {
+export const add_user = async (id) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -48,7 +48,7 @@ export const add_user = async (userID) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                newResponder: userID
+                newResponder: id
             }
         });
 
@@ -65,7 +65,7 @@ export const add_user = async (userID) => {
     }
 }
 
-export const accept_user = async (userID) => {
+export const accept_user = async (id) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -78,7 +78,7 @@ export const accept_user = async (userID) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                currRequester: userID
+                currRequester: id
             }
         })
         
@@ -95,7 +95,7 @@ export const accept_user = async (userID) => {
     }
 }
 
-export const decline_user = async (userID) => {
+export const decline_user = async (id) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -108,7 +108,7 @@ export const decline_user = async (userID) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                currRequester: userID
+                currRequester: id
             }
         })
         
@@ -125,7 +125,7 @@ export const decline_user = async (userID) => {
     }
 }
 
-export const delete_user = async (userID) => {
+export const delete_user = async (id) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -138,7 +138,7 @@ export const delete_user = async (userID) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                currResponder: userID
+                currResponder: id
             }
         })
         
@@ -155,21 +155,21 @@ export const delete_user = async (userID) => {
     }
 }
 
-export const create_chat = (userID) => async dispatch => {
-    if (localStorage.token) {
-        setAuthToken(localStorage.token);
-    }
-
+export const create_chat = async (ids) => {
     try {
+        if (localStorage.token) {
+            setAuthToken(localStorage.token);
+        }
+        
         const res = await axios.request({
             method: 'POST',
-            url: 'api/social/create',
+            url: 'api/chat/create',
             data: {
-                users: userID
+                users: ids
             }
         });
 
-        //DISPATCH
+        // DISPTACH
     }
     catch (err) {
         return {
