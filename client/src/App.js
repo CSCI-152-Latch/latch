@@ -10,8 +10,11 @@ import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
 import EditProfile from "./GlobalComponents/profile-forms/EditProfile";
 import AddExperience from "./GlobalComponents/profile-forms/AddExperience";
 import AddEducation from "./GlobalComponents/profile-forms/AddEducation";
+import Profiles from "./GlobalComponents/p-forms/Profiles";
+import Profile from "./GlobalComponents/p-form/Profile";
 //route to add hobbies
 //route to add job postings
+//route to add coupanies not private route
 //route to upload files.
 import PrivateRoute from "./GlobalComponents/routing/PrivateRoute";
 //redux stuff
@@ -41,6 +44,8 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/profiles" component={Profiles} />
+              <Route exact path= "/profile/:id" component={Profile} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact
