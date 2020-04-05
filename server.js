@@ -8,8 +8,14 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
-    console.log('We have a new connection');
+io.on('connect', (socket) => {
+    socket.on('SEND_MESSAGE', data => {
+        io.emit('RECEIVE_MESSAGE', data)
+    });
+
+    socket.on('GET_THIS_CHAT', data => {
+        io.emit('RECEIVE_CHAT', data);
+    });
 
     socket.on('disconnect', () => {
         console.log('User have left');
@@ -35,4 +41,4 @@ app.use('/api/social', require('./routes/api/social'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server started on port ${PORT}`));

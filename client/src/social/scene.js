@@ -4,48 +4,50 @@ import { add_user, create_chat, cancel_user, accept_user, decline_user, delete_u
 import { get_user_relation, get_chats, get_specific_conversation } from './utils/functions';
 import { Redirect } from "react-router-dom";
 
-import Mutual        from './components/Mutual'
-import Friend        from './components/Friend';
-import Responder     from './components/Responder';
-import Requester     from './components/Requester';
-import ChatList      from './components/ChatList';
-import Conversation  from './components/Conversation'
+import Mutual    from './components/Mutual'
+import Friend    from './components/Friend';
+import Responder from './components/Responder';
+import Requester from './components/Requester';
+import Chat      from './components/Chat';
+import Room      from './components/Room';
+import Conversation from './components/Conversation';
 
 import './style.css'
+
+import OpenSocket from 'socket.io-client';
+const socket = OpenSocket('http://localhost:3000');
 
 const Social = () => {
     const [mutuals, set_mutuals] = useState([]);
     const [friends, set_friends] = useState([]);
     const [responders, set_responders] = useState([]); 
     const [requesters, set_requesters] = useState([]);
-    const [chats, set_chatlist] = useState([]);
-    const [conversations, set_conversations] = useState([]);
-
-    const [currMessage, set_message] = useState('');
+    const [rooms, set_rooms] = useState([]);
+    const [conversations, set_conversation] = useState([]);
 
     const [isUpdate, set_update] = useState(false);
-    const [isChat, set_chat] = useState(false)
+    const [isChat, set_chat] = useState(false);
 
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
-    useEffect(() => {
+    useEffect(() => {        
         const fetch_data = async () => {
             try {
-                // const mutuals = await get_user_relation('users/mutuals');
-                // set_mutuals(mutuals);
+                const mutuals = await get_user_relation('users/mutuals');
+                set_mutuals(mutuals);
 
-                // const requesters = await get_user_relation('social/requesters');
-                // set_requesters(requesters);
+                const requesters = await get_user_relation('social/requesters');
+                set_requesters(requesters);
 
-                // const responders = await get_user_relation('social/responders');
-                // set_responders(responders);
+                const responders = await get_user_relation('social/responders');
+                set_responders(responders);
 
-                // const friends = await get_user_relation('social/friends');
-                // set_friends(friends);
+                const friends = await get_user_relation('social/friends');
+                set_friends(friends);
 
-                const chats = await get_chats();
-                set_chatlist(chats);
+                const rooms = await get_chats();
+                set_rooms(rooms);
             }
             catch (err) {
                 alert(err);
@@ -54,17 +56,6 @@ const Social = () => {
         fetch_data();
     }, [isUpdate, isChat])
 
-    useEffect(() => {
-        const fetch_data = async () => {
-            try {
-
-            }
-            catch (err) {
-                alert(err);
-            }
-            fetch_data();
-        }
-    }, )
 
     if (!isAuthenticated) {
         return <Redirect to="/login" />
@@ -79,9 +70,9 @@ const Social = () => {
                     const fetch_data = async () => {
                         const newDispatch = await add_user(id);
                         dispatch(newDispatch);
-                        set_update(!isUpdate);
                     }
                     fetch_data();
+                    set_update(!isUpdate);
                 }}
             />
             <Friend
@@ -91,9 +82,9 @@ const Social = () => {
                     const fetch_data = async () => {
                         const newDispatch = await delete_user(id);
                         dispatch(newDispatch);
-                        // set_update(!isUpdate);
                     }
                     fetch_data();
+                    set_update(!isUpdate);
                 }}
             />
             <Requester
@@ -103,9 +94,9 @@ const Social = () => {
                     const fetch_data = async () => {
                         const newDispatch = await cancel_user(id);
                         dispatch(newDispatch)
-                        set_update(!isUpdate);
                     }
                     fetch_data();
+                    set_update(!isUpdate);
                 }}
             />
             <Responder
@@ -116,9 +107,9 @@ const Social = () => {
                         const newDispatch = await accept_user(id);
                         await create_chat({'id': id});
                         dispatch(newDispatch);
-                        set_update(!isUpdate);
                     }
-                    fetch_data()
+                    fetch_data();
+                    set_update(!isUpdate);
                 }}
                 onDecline = {(id) => {
                     const fetch_data = async () => {
@@ -129,32 +120,25 @@ const Social = () => {
                     fetch_data();
                 }}
             />
-            <ChatList
-                chats = {chats}
+            <Room
+                rooms = {rooms}
                 className = 'profile-size'
                 onChat = {(id) => {
-                    set_chat(true);
-                    const fetch_data = async () => {
-                        const getMessage = await get_specific_conversation(id);
-                        set_conversations(getMessage);
-                        set_chat(true);
-                    }
-                    fetch_data();
+                    socket.emit('GET_THIS_CHAT', id);
+                    socket.on('RECEIVE_CHAT', data => {
+                        const fetch_data = async () => {
+                            const conversation = await get_specific_conversation(data);
+                            set_conversation(conversation);
+                        }
+                        fetch_data()
+                    })
+                    // set_update(!isUpdate);
+                    set_chat(true)
                 }}
             />
             <Conversation
-                conversations = {conversations}
+                conversation = {conversations}
                 className = 'profile-size'
-                onChange = {(newMessage) => {
-                    set_message(newMessage);
-                }}
-                onMessage = {(id, newMessage) => {
-                    const fetch_data = async () => {
-                        // const newDispatch = await add_message(id, newMessage);
-                        // dispatch
-                    }
-                    fetch_data();
-                }}
                 onChat = {isChat}
             />
         </Fragment>

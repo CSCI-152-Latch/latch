@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ChatList = (prop) => {
-    const { chats, className, onChat } = prop;
+const Room = (prop) => {
+    const { rooms, className, onChat } = prop;
 
     return (
         <div>
@@ -9,7 +9,7 @@ const ChatList = (prop) => {
                 Chat List
             </h1>
             <ul>
-                {chats.map((chat) => {
+                {rooms.map((chat) => {
                     return (
                         <li key = {chat._id}>
                             <h1>
@@ -38,4 +38,4 @@ const ChatList = (prop) => {
     )
 }
 
-export default ChatList;
+export default Room;

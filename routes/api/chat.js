@@ -108,12 +108,6 @@ router.get('/chat', auth, async (req, res) => {
                 model: 'users',
                 select: '-email -password -date -__v'
             }
-        ).populate(
-            {
-                path: 'messages.owner',
-                model: 'users',
-                select: '-email -password -date -__v'
-            }
         );
         res.json(getChats);
     }
@@ -126,8 +120,19 @@ router.get('/go', auth, async (req, res) => {
     try {
         const { chatID } = req.query
 
-        const getChat = await Chat.findById(chatID);
-        res.json(getChat);
+        const getChat = await Chat.findById(
+            chatID,
+            { messages: 1, _id: 0 }        
+        ).populate(
+            {
+                path: 'messages.owner',
+                model: 'users',
+                select: '-email -password -date -__v'
+            }
+        );
+        
+        const { messages } = getChat;
+        res.json(messages);
     }
     catch (err) {  
         res.status(500).send(err);

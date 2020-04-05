@@ -1,57 +1,38 @@
 import React from 'react';
-import Moment from 'react-moment';
-import moment from 'moment';
 
 const Conversation = (prop) => {
-    const { conversations, className, onChange, onMessage, onChat } = prop;
-    console.log('sadjdsasdaasdd')
-    console.log(conversations);
+    const { conversation, className, onChat } = prop;
 
     if (!onChat) {
         return (
             <div>
-                <h1> This is empty </h1>
+                You have not click any chat
             </div>
         )
-    }
+    } 
 
     return (
         <ul>
             <h1>
                 This your conversation
             </h1>
-            <div>
-                {conversations.map((messages, index) => {
-                    return (
-                        <li key = {index}>
-                            {/* {messages.map((message) => {
-                                return (
-                                    <li key = {message._id}>
-                                        {message.owner}
-                                    </li>
-                                )
-                            })} */}
-                        </li>
-                    )
-                })}
-                {/* {conversations.messages.map((message) => {
-                    return (
-                        <li key = {message._id}>
-                            {message.owner.firstName} {message.owner.lastName}  : {message.message}
-                        </li>
-                    )
-                })} */}
-            </div>  
+            {conversation.map((message) => {
+                return (
+                    <li key = {message._id}>
+                        <img src = {message.owner.avatar} className = {className}/>
+                        <br/>
+                        {message.owner.firstName} {' '} {message.owner.lastName} : {message.message}
+                        <br/>
+                        {message.owner.date}
+                    </li>
+                )
+            })}
             <input
                 type = 'text'
                 className = {className}
                 placeholder = 'Add Message'
-                onChange = {(e) => {
-                    const newMessage = e.target.value;
-                    onChange(newMessage);
-                }}
                 onClick = {() => {
-                    onMessage();
+                    
                 }}
             />
         </ul>
