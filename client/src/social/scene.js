@@ -8,7 +8,6 @@ import Mutual    from './components/Mutual'
 import Friend    from './components/Friend';
 import Responder from './components/Responder';
 import Requester from './components/Requester';
-import Chat      from './components/Chat';
 import Room      from './components/Room';
 import Conversation from './components/Conversation';
 
