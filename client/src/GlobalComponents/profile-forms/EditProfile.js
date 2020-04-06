@@ -16,7 +16,8 @@ const EditProfile = ({
     twitter: "",
     facebook: "",
     linkedin: "",
-    fields: ""
+    fields: "",
+    hobbies: ""
   });
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
@@ -27,6 +28,7 @@ const EditProfile = ({
     setFormData({
       status: loading || !profile.status ? "" : profile.status,
       fields: loading || !profile.fields ? "" : profile.fields.join(","),
+      hobbies: loading || !profile.hobbies ? "" : profile.hobbies.join(","),
       bio: loading || !profile.bio ? "" : profile.bio,
       twitter: loading || !profile.social ? "" : profile.social.twitter,
       facebook: loading || !profile.social ? "" : profile.social.facebook,
@@ -34,7 +36,7 @@ const EditProfile = ({
     });
   }, [loading, getCurrentProfile]); //may need to take out getcuurentprofile later!!!!
 
-  const { status, bio, twitter, facebook, linkedin, fields } = formData;
+  const { status, bio, twitter, facebook, linkedin, fields, hobbies } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,7 +48,7 @@ const EditProfile = ({
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Create Your Profile</h1>
+      <h1 className="large text-primary">Edit Your Profile</h1>
       <p className="lead">
         <i className="fas fa-user" /> Let's get some information to make your
         profile stand out
@@ -76,6 +78,18 @@ const EditProfile = ({
             placeholder="* Fields"
             name="fields"
             value={fields}
+            onChange={e => onChange(e)}
+          />
+          <small className="form-text">
+            Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
+          </small>
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="* Hobbies"
+            name="hobbies"
+            value={hobbies}
             onChange={e => onChange(e)}
           />
           <small className="form-text">

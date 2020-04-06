@@ -6,7 +6,8 @@ const ProfileItem = ({
   profile: {
     user: { _id, firstName, lastName, avatar, email, nickName },
     status,
-    fields
+    fields,
+    hobbies
   }
 }) => {
   return (
@@ -26,6 +27,13 @@ const ProfileItem = ({
         {fields.slice(0, 4).map((field, index) => (
           <li key={index} className='text-primary'>
             <i className='fas fa-check' /> {field}
+          </li>
+        ))}
+      </ul>
+      <ul>
+        {hobbies.slice(0, 4).map((hobby, index) => (
+          <li key={index} className='text-primary'>
+            <i className='fas fa-check' /> {hobby}
           </li>
         ))}
       </ul>

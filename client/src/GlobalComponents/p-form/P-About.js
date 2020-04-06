@@ -5,6 +5,7 @@ const ProfileAbout = ({
   profile: {
     bio,
     fields,
+    hobbies,
     user: { firstName,lastName }
   }
 }) => (
@@ -21,6 +22,14 @@ const ProfileAbout = ({
       {fields.map((field, index) => (
         <div key={index} className='p-1'>
           <i className='fas fa-check' /> {field}
+        </div>
+      ))}
+    </div>
+    <h2 className='text-primary'>My Hobbies</h2>
+    <div className='skills'>
+      {hobbies.map((hobby, index) => (
+        <div key={index} className='p-1'>
+          <i className='fas fa-check' /> {hobby}
         </div>
       ))}
     </div>

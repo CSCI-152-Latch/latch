@@ -4,93 +4,98 @@ const ProfileSchema = mongoose.Schema({
   user: {
     //User ID
     type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    ref: "users",
   },
   status: {
     //Job position
-    type: String
+    type: String,
   },
   bio: {
     //About them
     type: String,
-    default: ""
+    default: "",
   },
   experience: [
     //Their experience
     {
       title: {
-        type: String
+        type: String,
       },
       company: {
-        type: String
+        type: String,
       },
       location: {
-        type: String
+        type: String,
       },
       from: {
-        type: Date
+        type: Date,
       },
       to: {
-        type: Date
+        type: Date,
       },
       current: {
-        type: Boolean
+        type: Boolean,
       },
       description: {
-        type: String
-      }
-    }
+        type: String,
+      },
+    },
   ],
   education: [
     {
       school: {
         type: String,
-        required: true
+        required: true,
       },
       degree: {
         type: String,
-        required: true
+        required: true,
       },
       fieldofstudy: {
         type: String,
-        required: true
+        required: true,
       },
       from: {
         type: Date,
-        required: true
+        required: true,
       },
       to: {
-        type: Date
+        type: Date,
       },
       current: {
         type: Boolean,
-        default: false
+        default: false,
       },
       description: {
-        type: String
-      }
-    }
+        type: String,
+      },
+    },
   ],
   social: {
     twitter: {
-      type: String
+      type: String,
     },
     facebook: {
-      type: String
+      type: String,
     },
     linkedin: {
-      type: String
-    }
+      type: String,
+    },
   },
   fields: {
     //The fields or subjects they are in
+    type: [String],
+    default: [],
+  },
+  hobbies:{
+    //the hobbies they are into..
     type: [String],
     default: []
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = Profile = mongoose.model("profiles", ProfileSchema);

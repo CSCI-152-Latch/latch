@@ -115,7 +115,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { bio, status, facebook, twitter, linkedin, fields } = req.body;
+    const { bio, status, facebook, twitter, linkedin, fields, hobbies } = req.body;
 
     //build profile object
     const profileFields = {};
@@ -128,6 +128,9 @@ router.post(
     //if (githubusername) profileFields.githubusername = githubusername;
     if (fields) {
       profileFields.fields = fields.split(",").map(field => field.trim());
+    }
+    if (hobbies) {
+      profileFields.hobbies = hobbies.split(",").map(hobby => hobby.trim());
     }
 
     //build social object
