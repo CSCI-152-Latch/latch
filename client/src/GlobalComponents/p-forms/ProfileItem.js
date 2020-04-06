@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const ProfileItem = ({
   profile: {
-    user: { _id, firstName, lastName, avatar, email },
+    user: { _id, firstName, lastName, avatar, email, nickName },
     status,
     fields
   }
@@ -13,7 +13,7 @@ const ProfileItem = ({
     <div className='profile bg-light'>
       <img src={avatar} alt='' className='round-img' />
       <div>
-  <h2>{firstName} {' '} {lastName}</h2>
+  <h2>{firstName} {' '} {lastName} aka {' '} {nickName}</h2>
         <p>
           {status} {' '} {email}
         </p>

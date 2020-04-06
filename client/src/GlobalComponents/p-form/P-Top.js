@@ -5,13 +5,15 @@ const ProfileTop = ({
   profile: {
     status,
     social,
-    user: { firstName,lastName, avatar }
+    user: { firstName,lastName, avatar, nickName }
   }
 }) => {
   return (
     <div className='profile-top bg-primary p-2'>
       <img className='round-img my-1' src={avatar} alt='' />
   <h1 className='large'>{firstName}{' '}{lastName}</h1>
+  <h4>aka</h4>
+  <h1 className = 'large'>{nickName}</h1>
       <p className='lead'>
         {status}
       </p>

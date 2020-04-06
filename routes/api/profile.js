@@ -173,6 +173,7 @@ router.get("/", async (req, res) => {
       "firstName",
       "lastName",
       "email",
+      "nickName",
       "avatar"
     ]);
     res.json(profiles);
@@ -190,7 +191,7 @@ router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id
-    }).populate("user", ["firstName", "lastName", "email", "avatar"]); //ep18
+    }).populate("user", ["firstName", "lastName", "email","nickName", "avatar"]); 
 
     if (!profile) return res.status(400).json({ msg: "Profile not found" });
 
