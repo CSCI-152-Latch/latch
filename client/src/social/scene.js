@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { add_user, create_chat, cancel_user, accept_user, decline_user, delete_user } from './redux/dispatch';
-import { get_user_relation, get_chats, get_specific_conversation } from './utils/functions';
+import { get_user_relation, get_chats, get_specific_conversation, add_message } from './utils/functions';
 import { Redirect } from "react-router-dom";
 
 import Mutual    from './components/Mutual'
@@ -24,9 +24,12 @@ const Social = () => {
     const [requesters, set_requesters] = useState([]);
     const [rooms, set_rooms] = useState([]);
     const [conversations, set_conversation] = useState([]);
+    const [chatID, set_chatID] = useState('');
+    const [message, setMessage] = useState('');
 
     const [isUpdate, set_update] = useState(false);
     const [isChat, set_chat] = useState(false);
+    const [isMessage, set_message] = useState(false);
 
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -54,8 +57,7 @@ const Social = () => {
             }
         }
         fetch_data();
-    }, [isUpdate, isChat])
-
+    }, [isUpdate, isChat, isMessage])
 
     if (!isAuthenticated) {
         return <Redirect to="/login" />
@@ -124,22 +126,52 @@ const Social = () => {
                 rooms = {rooms}
                 className = 'profile-size'
                 onChat = {(id) => {
-                    socket.emit('GET_THIS_CHAT', id);
-                    socket.on('RECEIVE_CHAT', data => {
+                    // socket.emit('GET_THIS_CHAT', id);
+                    // socket.on('RECEIVE_CHAT', data => {
                         const fetch_data = async () => {
-                            const conversation = await get_specific_conversation(data);
+                            const conversation = await get_specific_conversation(id);
+                            set_chatID(id);
                             set_conversation(conversation);
                         }
                         fetch_data()
-                    })
-                    // set_update(!isUpdate);
-                    set_chat(true)
+                    // })
+                    set_chat(true);
                 }}
             />
             <Conversation
                 conversation = {conversations}
+                message = {message}
                 className = 'profile-size'
-                onChat = {isChat}
+                onMessage = {(message) => {
+                    setMessage(message);
+                }}
+                onClick = {() => {
+                    socket.emit(
+                        'SEND_MESSAGE', 
+                        {
+                            chatID: chatID,
+                            message: message,
+                            date: Date.now()
+                        }
+                    );
+                    socket.once('RECEIVE_MESSAGE', data => {
+                        const fetch_data = async () => {
+                            try {
+                                console.log(data);
+                                const user = await add_message(data);
+                                console.log(user);
+                                
+                                set_conversation(user)
+                            }
+                            catch (err) {
+                                alert(err);
+                            }
+                        }
+                        fetch_data();
+                    })
+                    set_message(!isMessage);
+                }}
+                isChat = {isChat}
             />
         </Fragment>
     )

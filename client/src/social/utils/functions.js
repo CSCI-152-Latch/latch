@@ -53,3 +53,21 @@ export const get_specific_conversation = async (id) => {
         return err;
     }
 }
+
+export const add_message = async (data) => {
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/chat/add',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data
+        })
+        return res.data;
+
+    }
+    catch (err) {
+        return err;
+    }
+}

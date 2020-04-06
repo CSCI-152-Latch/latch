@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Conversation = (prop) => {
-    const { conversation, className, onChat } = prop;
+    const { conversation, message, className, isChat, onMessage, onClick } = prop;
 
-    if (!onChat) {
+    if (!isChat) {
         return (
             <div>
                 You have not click any chat
@@ -21,20 +21,30 @@ const Conversation = (prop) => {
                     <li key = {message._id}>
                         <img src = {message.owner.avatar} className = {className}/>
                         <br/>
-                        {message.owner.firstName} {' '} {message.owner.lastName} : {message.message}
+                        {message.owner.firstName} {message.owner.lastName}: {message.message}
                         <br/>
-                        {message.owner.date}
+                        {message.date}
                     </li>
                 )
             })}
             <input
                 type = 'text'
-                className = {className}
                 placeholder = 'Add Message'
-                onClick = {() => {
-                    
+                size = {30}
+                onChange = {(e) => {
+                    const message = e.target.value;
+                    onMessage(message);
                 }}
+                value = {message}
             />
+            <button
+                onClick = {(e) => {
+                    e.preventDefault();
+                    onClick();
+                }}
+            >
+                Send
+            </button>
         </ul>
     )
 }

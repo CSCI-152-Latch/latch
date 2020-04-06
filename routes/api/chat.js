@@ -35,33 +35,39 @@ router.post(
 // Purpose:      Add a message
 // Access:       Private
 router.post(
-    '/message', 
+    '/add', 
     auth, 
     async (req, res) => {
         try {
-            const { chatID, owner, message } = req.body;
+            const userID = req.user.id;
+            const { chatID, message, date } = req.body;
 
-            const isChat = await Chat.exists(
-                { _id: chatID }
-            )
-            if (!isChat) {
-                return res.send('Chat does not exist');
-            }
-
-            const addMessage = await Chat.findByIdAndUpdate( 
+            const getChat = await Chat.findByIdAndUpdate( 
                 chatID,
                 {
                     $push: {
                         messages: {
-                            owner: owner,
-                            message: message
+                            owner: userID,
+                            message: message,
+                            date: date
                         }
                     }
                 },
-                { new: true }
+                { 
+                    projection: { messages: 1 },
+                    new: true 
+                }
+            ).populate(
+                {
+                    path: 'messages.owner',
+                    model: 'users',
+                    select: '-email -password -date -__v'
+                }
             );
+
+            const { messages } = getChat 
             // Side note: Might get the first 10 recent message and not all them
-            res.send(addMessage);
+            res.send(messages);
         }
         catch (err) {
             res.status(500).send(err);
