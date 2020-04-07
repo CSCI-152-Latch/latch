@@ -3,7 +3,30 @@ import Type from './type';
 
 import setAuthToken from '../../utils/setAuthToken';
 
-export const update_user = async (userField, userData) => {
+const get_field = async () => {
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: '/api/setting/me',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        return {
+            type: Type.GET_USER,
+            payload: res.data
+        };
+    }
+    catch (err) {
+        return {
+            type: Type.ERROR,
+            payload: err
+        };
+    }
+}
+
+const update_field = async (userField, userData) => {
     try {
         if (localStorage.token) {
             setAuthToken(localStorage.token);
@@ -31,4 +54,9 @@ export const update_user = async (userField, userData) => {
             payload: err
         };
     }
+}
+
+export default {
+    get_field,
+    update_field
 }
