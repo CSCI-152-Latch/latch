@@ -8,8 +8,7 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   LOGOUT,
-  CLEAR_PROFILE,
-  USER_UPDATED
+  CLEAR_PROFILE
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -37,48 +36,6 @@ export const loadUser = () => async dispatch => {
         });
     }
 };
-
-export const get_user = async () => {
-    try {
-        const res = await axios.request({
-            method: 'GET',
-            url: '/api/users/me',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return res.data;
-    }
-    catch (err) {
-        return err
-    }
-}
-
-export const update_user = (user) => async dispatch => {
-    try {
-        // console.log(user);
-        const res = await axios.request({
-            method: 'POST',
-            url: '/api/users/update',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                user
-            }
-        })
-        // console.log('Hello');
-        console.log(res.data);
-        dispatch({
-            type: USER_UPDATED,
-            payload: res.data
-        });
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-
 
 //Register User
 export const register = (

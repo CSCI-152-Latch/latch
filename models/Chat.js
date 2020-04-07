@@ -1,17 +1,19 @@
 const mongoose = require('mongoose');
 
 const ChatSchema = mongoose.Schema({
-    users: [
-        {
-            _id: {
-                type: String,
-                ref: 'users',
-            }
+    users: [{
+        _id: {
+            type: String,
+            ref: 'users'
         }
-    ],
+    }],
+    title: {
+        type: String,
+        default: 'Bakl'
+    },
     messages: [
         {
-            _id: {
+            owner: {
                 type: String,
                 ref: 'users'
             },
