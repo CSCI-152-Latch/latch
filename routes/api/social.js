@@ -36,6 +36,45 @@ router.post(
 
 //==============================================================================================================//
 //                                                                                                              //
+//                                      @route     POST api/social/user                                         //
+//                                      @desc      Get user connection                                          //
+//                                      @access    Private                                                      //
+//                                                                                                              //
+//==============================================================================================================//
+router.get(
+    '/user',
+    auth,
+    async (req, res) => {
+        try {
+            const userID = req.user.id;
+
+            const getConnection = await Friend.findById(
+                { _id: userID },
+                { _id: 0, __v: 0 }
+            ).populate([
+                {
+                    path: 'friends',
+                    model: 'users'
+                },
+                {
+                    path: 'requesters',
+                    model: 'users'
+                },
+                {
+                    path: 'responders',
+                    model: 'users'
+                }
+            ]);
+            res.json(getConnection);
+        }
+        catch (err) {
+            res.status(500).json(err);
+        }  
+    }
+);
+
+//==============================================================================================================//
+//                                                                                                              //
 //                                      @route     POST api/social/add                                          //
 //                                      @desc      Add users                                                    //
 //                                      @access    Private                                                      //
@@ -65,8 +104,14 @@ router.post(
                     {
                         $addToSet: { requesters: newResponder }
                     },
-                    { new: true }
-                ),
+                    { 
+                        new: true,
+                        fields: 'requesters'
+                    }
+                ).populate({
+                    path: 'requesters',
+                    model: 'users',
+                }),
                 Friend.findOneAndUpdate(
                     { 
                         $and: [
@@ -85,7 +130,9 @@ router.post(
                     { new: true }
                 )
             ]);
-            res.json(result);
+            
+            const [requesters, _] = result; 
+            res.json(requesters);
         }
         catch (err) {
             res.status(500).json(err);
@@ -114,9 +161,7 @@ router.get(
                 path: 'requesters',
                 model: 'users'
             });
-
-            const { requesters } = getRequesters;
-            res.json(requesters);
+            res.json(getRequesters);
         }
         catch (err) {
             res.status(500).json(err);
@@ -146,9 +191,7 @@ router.get(
                 path: 'responders',
                 model: 'users'
             });
-
-            const { responders } = getResponders;
-            res.json(responders);
+            res.json(getResponders);
         }
         catch (err) {
             res.status(500).json(err);
@@ -178,9 +221,7 @@ router.get(
                 path: 'friends',
                 model: 'users'
             });
-
-            const { friends } = getFriends;
-            res.json(friends);
+            res.json(getFriends);
         }
         catch (err) {
             res.status(500).json(err);
@@ -209,8 +250,14 @@ router.post(
                     {
                         $pull: { requesters: currResponder }
                     },
-                    { new: true }
-                ),
+                    { 
+                        new: true,
+                        fields: 'requesters'
+                    }
+                ).populate({
+                    path: 'requesters',
+                    model: 'users'
+                }),
                 Friend.findOneAndUpdate(
                     { _id: currResponder },
                     {
@@ -219,7 +266,9 @@ router.post(
                     { new: true }
                 )
             ]);
-            res.json(result);
+
+            const [requesters, _] = result; 
+            res.json(requesters);
         }
         catch (err) {
             res.status(500).json(err);
@@ -254,8 +303,14 @@ router.post(
                     {
                         $pull: { friends: currResponder }
                     },
-                    { new: true }
-                ),
+                    { 
+                        new: true,
+                        fields: 'friends'
+                    }
+                ).populate({
+                    path: 'friends',
+                    model: 'users'
+                }),
                 Friend.findOneAndUpdate(
                     {
                         $and: [
@@ -269,7 +324,9 @@ router.post(
                     { new: true }
                 )
             ]); 
-            res.json(result)
+
+            const [requester, _] = result; 
+            res.json(requester);
         }
         catch (err) {
             res.status(500).json(err)
@@ -304,8 +361,20 @@ router.post(
                         $pull: { responders: currRequester },
                         $addToSet: { friends: currRequester }
                     },
-                    { new: true }
-                ),
+                    { 
+                        new: true,
+                        fields: 'responders friends'
+                    }
+                ).populate([
+                    {
+                        path: 'responders',
+                        model: 'users'
+                    },
+                    {
+                        path: 'friends',
+                        model: 'users'
+                    }
+                ]),
                 Friend.findOneAndUpdate(
                     {
                         $and: [
@@ -320,7 +389,9 @@ router.post(
                     { new: true }
                 )
             ]);
-            res.json(result);         
+
+            const [requester, _] = result;
+            res.json(requester);         
         }
         catch (err) {
             res.status(500).json(err);
@@ -354,8 +425,14 @@ router.post(
                     {
                         $pull: { responders: currRequester }
                     },
-                    { new: true }
-                ),
+                    { 
+                        new: true,
+                        fields: 'responders'
+                    }
+                ).populate({
+                    path: 'responders',
+                    model: 'users'
+                }),
                 Friend.findOneAndUpdate(
                     {
                         $and: [
@@ -369,7 +446,9 @@ router.post(
                     { new: true }
                 )
             ]);
-            res.json(result);
+
+            const [requester, _] = result;
+            res.json(requester);  
         }
         catch (err) {
             res.status(500).json(err);

@@ -49,7 +49,7 @@ const Setting = () => {
                     className = 'large'
                 />
                 <Field
-                    field = 'password'
+                    field = 'date'
                     update_field = {Dispatch.update_field}
                     className = 'large'
                 />

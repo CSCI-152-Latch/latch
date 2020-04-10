@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const Friend = require('../models/Friend');
 
 // Check if user is valid 
 module.exports = (req, res, next) => {

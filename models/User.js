@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     },
     date: {                 // When they created thier account   
         type: Date,
-        default: Date.now
+        default: Date.now()
     }
 });
 

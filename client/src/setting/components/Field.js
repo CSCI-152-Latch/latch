@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 
 const Field = (prop) => {
     const { field, update_field, className } = prop;
@@ -10,9 +10,10 @@ const Field = (prop) => {
         if (getState) {
             return getState[field];
         }
-    });
+    }, shallowEqual);
+
     const [data, set_data] = useState('');
-    const getRead = useSelector(state => state.setting.isRead);
+    const getRead = useSelector(state => state.setting.isRead, shallowEqual);
 
     return (
         <div>
