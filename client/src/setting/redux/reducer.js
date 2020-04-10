@@ -1,27 +1,26 @@
 import Type from './type';
 
 const initialState = {
-    token: localStorage.getItem('token'),
-    isAuth: false,
     user: null,
-    error: null
+    error: null,
+    isRead: true
 };
 
 export default (state = initialState, action) => {
     const { type, payload } = action;
 
     switch(type) {
-        case Type.UPDATE_USER:
+        case Type.GET_USER:
+        case Type.UPDATE_USER: 
             return {
                 ...state,
-                isAuth: true,
                 user: payload
-            };
-        case Type.ERROR:
+            }
+        case Type.READ_USER: 
             return {
                 ...state,
-                error: payload
-            };
+                isRead: payload
+            }            
         default:
             return state;
     }

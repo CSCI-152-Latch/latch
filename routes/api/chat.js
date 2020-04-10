@@ -42,7 +42,7 @@ router.post(
             const userID = req.user.id;
             const { chatID, message, date } = req.body;
 
-            const getChat = await Chat.findByIdAndUpdate( 
+            const messages = await Chat.findByIdAndUpdate( 
                 chatID,
                 {
                     $push: {
@@ -64,8 +64,6 @@ router.post(
                     select: '-email -password -date -__v'
                 }
             );
-
-            const { messages } = getChat 
             // Side note: Might get the first 10 recent message and not all them
             res.send(messages);
         }
@@ -101,14 +99,19 @@ router.post(
 // Where:        api/chat
 // Purpose:      Get the user chats
 // Access:       Private
-router.get('/chat', auth, async (req, res) => {
+router.get('/rooms', auth, async (req, res) => {
     try {
         const user = req.user.id;
 
         const getChats = await Chat.find(
-            { users: {'_id': user} }, 
-            { __v: 0 }
-        ).populate(
+            { 
+                users: {
+                    _id: user
+                } 
+            }, 
+            { __v: 0, messages: 0 }
+        )
+        .populate(
             {
                 path: 'users._id',
                 model: 'users',
@@ -136,9 +139,8 @@ router.get('/go', auth, async (req, res) => {
                 select: '-email -password -date -__v'
             }
         );
-        
         const { messages } = getChat;
-        res.json(messages);
+        res.json({ chatID, messages });
     }
     catch (err) {  
         res.status(500).send(err);

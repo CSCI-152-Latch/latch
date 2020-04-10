@@ -1,62 +1,55 @@
 import axios from 'axios';
 import Type from './type';
 
-import setAuthToken from '../../utils/setAuthToken';
-
-const get_field = async () => {
+// Get random user 
+export const get_mutuals = async () => {
     try {
         const res = await axios.request({
             method: 'GET',
-            url: '/api/setting/me',
+            url: 'api/users/mutuals',
             headers: {
+                'x-auth-token': `${localStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
-        
+
         return {
-            type: Type.GET_USER,
+            type: Type.GET_MUTUALS,
             payload: res.data
-        };
+        }
     }
-    catch (err) {
+    catch (error) {
         return {
             type: Type.ERROR,
-            payload: err
-        };
+            payload: error
+        }
     }
 }
 
-const update_field = async (userField, userData) => {
+// Add a new user
+export const add_user = async (id) => {
     try {
-        if (localStorage.token) {
-            setAuthToken(localStorage.token);
-        }
-    
         const res = await axios.request({
             method: 'POST',
-            url: '/api/setting/update',
+            url: 'api/social/add',
             headers: {
+                'x-auth-token': `${localStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {
-                [userField]: userData
+                newResponder: id
             }
-        })
+        });
 
         return {
-            type: Type.UPDATE_USER,
+            type: Type.ADD_USER,
             payload: res.data
-        };
+        }
     }
     catch (err) {
         return {
             type: Type.ERROR,
-            payload: err
-        };
+            paylaod: err
+        }
     }
-}
-
-export default {
-    get_field,
-    update_field
 }

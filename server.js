@@ -10,7 +10,7 @@ const io = socketIO(server);
 
 io.on('connect', (socket) => {
     socket.on('SEND_MESSAGE', data => {
-        socket.emit('RECEIVE_MESSAGE', data)
+        io.emit('RECEIVE_MESSAGE', data)
     });
 
     // socket.on('GET_THIS_CHAT', data => {

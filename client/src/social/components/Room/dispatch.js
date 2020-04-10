@@ -1,62 +1,53 @@
 import axios from 'axios';
 import Type from './type';
 
-import setAuthToken from '../../utils/setAuthToken';
-
-const get_field = async () => {
+// Get the list of chat to the current user
+export const get_chats = async () => {
     try {
         const res = await axios.request({
             method: 'GET',
-            url: '/api/setting/me',
+            url: 'api/chat/rooms',
             headers: {
+                'x-auth-token': `${localStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
-        
         return {
-            type: Type.GET_USER,
+            type: Type.GET_ROOM,
             payload: res.data
-        };
+        }
     }
     catch (err) {
         return {
             type: Type.ERROR,
             payload: err
-        };
+        }
     }
 }
 
-const update_field = async (userField, userData) => {
+export const get_messages = async (id) => {
     try {
-        if (localStorage.token) {
-            setAuthToken(localStorage.token);
-        }
-    
         const res = await axios.request({
-            method: 'POST',
-            url: '/api/setting/update',
+            method: 'GET',
+            url: 'api/chat/go',
             headers: {
+                'x-auth-token': `${localStorage.token}`,
                 'Content-Type': 'application/json'
             },
-            data: {
-                [userField]: userData
+            params: {
+                chatID: id
             }
-        })
-
+        });
         return {
-            type: Type.UPDATE_USER,
+            type: Type.GET_MESSAGES,
             payload: res.data
-        };
+        }
     }
     catch (err) {
         return {
             type: Type.ERROR,
             payload: err
-        };
+        }
     }
 }
 
-export default {
-    get_field,
-    update_field
-}

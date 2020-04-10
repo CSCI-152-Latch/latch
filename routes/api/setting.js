@@ -13,7 +13,10 @@ router.get(
         try {
             const userID  = req.user.id;
 
-            const getUser = await User.findById(userID);
+            const getUser = await User.findById(
+                userID, 
+                { _id: 0, __v: 0, password: 0 }
+            );
             res.json(getUser);
         }
         catch (err) {

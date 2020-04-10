@@ -1,62 +1,55 @@
 import axios from 'axios';
 import Type from './type';
 
-import setAuthToken from '../../utils/setAuthToken';
-
-const get_field = async () => {
+// Get list of user requester
+export const get_requesters = async () => {
     try {
         const res = await axios.request({
             method: 'GET',
-            url: '/api/setting/me',
+            url: 'api/social/requesters',
             headers: {
+                'x-auth-token': `${localStorage.token}`,
                 'Content-Type': 'application/json'
+            }
+        });
+
+        return {
+            type: Type.GET_REQUESTERS,
+            payload: res.data
+        }
+    }
+    catch (error) {
+        return {
+            type: Type.ERROR,
+            payload: error
+        }
+    }
+}
+
+// Requester cancel friend request to the current responder
+export const cancel_user = async (id) => {
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/social/cancel',
+            headers: {
+                'x-auth-token': `${localStorage.token}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                currResponder: id
             }
         });
         
         return {
-            type: Type.GET_USER,
+            type: Type.CANCEL_USER,
             payload: res.data
-        };
-    }
-    catch (err) {
-        return {
-            type: Type.ERROR,
-            payload: err
-        };
-    }
-}
-
-const update_field = async (userField, userData) => {
-    try {
-        if (localStorage.token) {
-            setAuthToken(localStorage.token);
         }
-    
-        const res = await axios.request({
-            method: 'POST',
-            url: '/api/setting/update',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                [userField]: userData
-            }
-        })
-
-        return {
-            type: Type.UPDATE_USER,
-            payload: res.data
-        };
     }
     catch (err) {
         return {
             type: Type.ERROR,
             payload: err
-        };
+        }
     }
-}
-
-export default {
-    get_field,
-    update_field
 }
