@@ -19,6 +19,7 @@ const Responder = (prop) => {
     }, [initFetch]);
 
     const responders = useSelector((state) => state.social.responders);
+    console.log('From Responder');
 
     return (
         <div>

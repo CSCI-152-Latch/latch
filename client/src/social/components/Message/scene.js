@@ -17,6 +17,7 @@ const Message = (prop) => {
             </div>
         )
     } 
+    console.log('From Message');
 
     return (
         <ul>
