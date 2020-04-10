@@ -8,7 +8,7 @@ export const get_chats = async () => {
             method: 'GET',
             url: 'api/chat/rooms',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -31,7 +31,7 @@ export const get_messages = async (id) => {
             method: 'GET',
             url: 'api/chat/go',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             params: {

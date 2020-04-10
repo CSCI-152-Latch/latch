@@ -7,7 +7,7 @@ export const add_messages = async (data) => {
             method: 'POST',
             url: 'api/chat/add',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data

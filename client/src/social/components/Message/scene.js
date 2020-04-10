@@ -46,7 +46,6 @@ const Message = (prop) => {
                 onChange = {(e) => {
                     set_message(e.target.value);
                 }}
-                value = {message}
             />
             <button
                 onClick = {(e) => {

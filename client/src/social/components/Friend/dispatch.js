@@ -8,7 +8,7 @@ export const get_friends = async () => {
             method: 'GET',
             url: 'api/social/friends',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -32,7 +32,7 @@ export const delete_user = async (id) => {
             method: 'POST',
             url: 'api/social/delete',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {

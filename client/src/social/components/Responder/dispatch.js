@@ -8,7 +8,7 @@ export const get_responders = async () => {
             method: 'GET',
             url: 'api/social/responders',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -59,7 +59,7 @@ export const decline_user = async (id) => {
             method: 'POST',
             url: 'api/social/decline',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {
