@@ -9,16 +9,21 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 io.on('connect', (socket) => {
-    socket.on('SEND_MESSAGE', data => {
-        io.emit('RECEIVE_MESSAGE', data)
-    });
+    socket.on('CONNECT', (data) => {
+        console.log(data);
+        socket.join(data);
+    })
 
-    // socket.on('GET_THIS_CHAT', data => {
-    //     io.emit('RECEIVE_CHAT', data);
-    // });
+    socket.on('SEND_MESSAGE', (data) => {
+        const { newDispatch, chatID } = data;
+        console.log(chatID);
+        socket.to(chatID).emit('RE', newDispatch);
+    })
 
     socket.on('disconnect', () => {
-        console.log('User have left');
+        console.log(`Disconnect: ` + socket.id);
+        // delete users[socket.id];
+        // console.log(users)
     });
 }); 
 

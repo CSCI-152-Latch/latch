@@ -11,7 +11,7 @@ export const add_messages = async (data) => {
                 'Content-Type': 'application/json'
             },
             data
-        })
+        });
         return {
             type: Type.ADD_MESSAGE,
             payload: res.data

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Socket from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { add_messages } from './dispatch';
+const socket = Socket.connect('http://localhost:3000');
 
 const Message = (prop) => {
     const { className } = prop;
@@ -10,6 +12,20 @@ const Message = (prop) => {
     const chatID = useSelector((state) => state.social.chatID);
     const [message, set_message] = useState('');
 
+    console.log(chatID);
+
+    useEffect(() => {
+        socket.emit('CONNECT', chatID);
+    }, [chatID])
+
+    useEffect(() => {
+        socket.on('RE', (data) => {
+            dispatch(data);
+        });
+    }, [])
+
+    console.log('From Message');
+
     if (!messages) {
         return (
             <div>
@@ -17,7 +33,6 @@ const Message = (prop) => {
             </div>
         )
     } 
-    console.log('From Message');
 
     return (
         <ul>
@@ -59,6 +74,7 @@ const Message = (prop) => {
                         }
                         const newDispatch = await add_messages(data);
                         dispatch(newDispatch);
+                        socket.emit('SEND_MESSAGE', {newDispatch: newDispatch, chatID: chatID});
                         set_message('');
                     }
                     send_data();
