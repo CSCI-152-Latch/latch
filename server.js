@@ -10,14 +10,12 @@ const io = socketIO(server);
 
 io.on('connect', (socket) => {
     socket.on('CONNECT', (data) => {
-        console.log(data);
-        socket.join(data);
+        socket.join(data);  // Creating with id of the ChatID
     })
 
     socket.on('SEND_MESSAGE', (data) => {
         const { newDispatch, chatID } = data;
-        console.log(chatID);
-        socket.to(chatID).emit('RE', newDispatch);
+        socket.to(chatID).emit('RECIEVE_MESSAGE', newDispatch);
     })
 
     socket.on('disconnect', () => {

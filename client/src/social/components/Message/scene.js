@@ -12,21 +12,21 @@ const Message = (prop) => {
     const chatID = useSelector((state) => state.social.chatID);
     const [message, set_message] = useState('');
 
-    console.log(chatID);
-
     useEffect(() => {
-        socket.emit('CONNECT', chatID);
+        if (chatID) {
+            socket.emit('CONNECT', chatID);
+        }
     }, [chatID])
 
     useEffect(() => {
-        socket.on('RE', (data) => {
+        socket.on('RECIEVE_MESSAGE', (data) => {
             dispatch(data);
         });
     }, [])
 
     console.log('From Message');
 
-    if (!messages) {
+    if (!chatID) {
         return (
             <div>
                 You have not click any chat
