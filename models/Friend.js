@@ -6,15 +6,15 @@ const FriendSchema = mongoose.Schema({
         ref: 'users'
     },
     friends: {
-        type: [String],
+        type: [Object],
         ref: 'users'
     },
     requesters: {
-        type: [String],
+        type: [Object],
         ref: 'users'
     },
     responders: {
-        type: [String],
+        type: [Object],
         ref: 'users'
     }
 });

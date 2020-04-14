@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require('mongoose');
 const Friend = require('../../models/Friend');
 const auth = require('../../middleware/auth');
 
@@ -87,6 +88,8 @@ router.post(
         try {
             const newRequester = req.user.id;
             const { newResponder } = req.body
+
+            // const newObjectID = mongoose.Types.ObjectId();
 
             const result = await Promise.all([
                 Friend.findOneAndUpdate(
