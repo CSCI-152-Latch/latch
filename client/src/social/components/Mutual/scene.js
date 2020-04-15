@@ -24,7 +24,7 @@ const Mutual = (prop) => {
     return (
         <div>
             <h1>
-                You may know this user?
+                Dummy Users
             </h1>
             <ul>
                 {mutuals.map((user) => {
@@ -48,7 +48,7 @@ const Mutual = (prop) => {
                                     send_data();
                                 }}
                             >
-                                Add me
+                                Add this user
                             </button>
                         </li>
                     )

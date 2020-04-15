@@ -11,7 +11,6 @@ import {
 import './style.css'
 
 const Social = () => {
-
     return (
         <Fragment>
             <Mutual

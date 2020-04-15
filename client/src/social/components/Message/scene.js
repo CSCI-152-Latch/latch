@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Socket from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { add_messages } from './dispatch';
+const socket = Socket.connect('http://localhost:3000');
 
 const Message = (prop) => {
     const { className } = prop;
@@ -10,7 +12,21 @@ const Message = (prop) => {
     const chatID = useSelector((state) => state.social.chatID);
     const [message, set_message] = useState('');
 
-    if (!messages) {
+    useEffect(() => {
+        if (chatID) {
+            socket.emit('CONNECT', chatID);
+        }
+    }, [chatID])
+
+    useEffect(() => {
+        socket.on('RECIEVE_MESSAGE', (data) => {
+            dispatch(data);
+        });
+    }, [])
+
+    console.log('From Message');
+
+    if (!chatID) {
         return (
             <div>
                 You have not click any chat
@@ -46,7 +62,6 @@ const Message = (prop) => {
                 onChange = {(e) => {
                     set_message(e.target.value);
                 }}
-                value = {message}
             />
             <button
                 onClick = {(e) => {
@@ -59,6 +74,7 @@ const Message = (prop) => {
                         }
                         const newDispatch = await add_messages(data);
                         dispatch(newDispatch);
+                        socket.emit('SEND_MESSAGE', {newDispatch: newDispatch, chatID: chatID});
                         set_message('');
                     }
                     send_data();

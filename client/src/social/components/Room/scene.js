@@ -19,6 +19,7 @@ const Room = (prop) => {
     }, [initFetch]);
 
     const rooms = useSelector((state) => state.social.rooms); 
+    console.log('From Room');
 
     return (
         <div>

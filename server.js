@@ -9,16 +9,25 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 io.on('connect', (socket) => {
-    socket.on('SEND_MESSAGE', data => {
-        io.emit('RECEIVE_MESSAGE', data)
-    });
+    socket.on('CONNECT', (data) => {
+        socket.join(data);  // Creating with id of the ChatID
+    })
 
-    // socket.on('GET_THIS_CHAT', data => {
-    //     io.emit('RECEIVE_CHAT', data);
-    // });
+    socket.on('SEND_MESSAGE', (data) => {
+        const { newDispatch, chatID } = data;
+        socket.to(chatID).emit('RECIEVE_MESSAGE', newDispatch);
+    })
+
+    socket.on('SEND_FRIEND_REQUEST', (data) => {
+        const { newDispatch, rooom } = data;
+        socket.join(data);
+        socket.to(rooom).emit('')
+    })
 
     socket.on('disconnect', () => {
-        console.log('User have left');
+        console.log(`Disconnect: ` + socket.id);
+        // delete users[socket.id];
+        // console.log(users)
     });
 }); 
 

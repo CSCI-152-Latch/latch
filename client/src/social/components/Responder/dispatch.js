@@ -8,7 +8,7 @@ export const get_responders = async () => {
             method: 'GET',
             url: 'api/social/responders',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -28,11 +28,12 @@ export const get_responders = async () => {
 
 export const accept_user = async (id) => {
     try {
+        console.log(id);
         const res = await axios.request({
             method: 'POST',
             url: 'api/social/accept',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {
@@ -59,7 +60,7 @@ export const decline_user = async (id) => {
             method: 'POST',
             url: 'api/social/decline',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {

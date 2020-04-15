@@ -8,11 +8,11 @@ export const get_mutuals = async () => {
             method: 'GET',
             url: 'api/users/mutuals',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             }
         });
-
+    
         return {
             type: Type.GET_MUTUALS,
             payload: res.data
@@ -33,7 +33,7 @@ export const add_user = async (id) => {
             method: 'POST',
             url: 'api/social/add',
             headers: {
-                'x-auth-token': `${localStorage.token}`,
+                'x-auth-token': `${sessionStorage.token}`,
                 'Content-Type': 'application/json'
             },
             data: {
