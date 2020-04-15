@@ -18,6 +18,12 @@ io.on('connect', (socket) => {
         socket.to(chatID).emit('RECIEVE_MESSAGE', newDispatch);
     })
 
+    socket.on('SEND_FRIEND_REQUEST', (data) => {
+        const { newDispatch, rooom } = data;
+        socket.join(data);
+        socket.to(rooom).emit('')
+    })
+
     socket.on('disconnect', () => {
         console.log(`Disconnect: ` + socket.id);
         // delete users[socket.id];

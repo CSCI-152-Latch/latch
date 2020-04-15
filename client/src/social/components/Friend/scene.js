@@ -30,10 +30,10 @@ const Friend = (prop) => {
                 {friends.map((user) => {
                     return (
                         <li key = {user._id}>
-                            {user.firstName} {user.lastName},
+                            {user.user.firstName} {user.user.lastName},
                             <br/>
                             <img 
-                                src = {user.avatar} 
+                                src = {user.user.avatar} 
                                 className = {className}
                                 alt = ''
                             />
@@ -42,8 +42,9 @@ const Friend = (prop) => {
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {
-                                        const friends = await delete_user(user._id);
-                                        dispatch(friends);
+                                        const deleteFriend = await delete_user(user.user._id);
+                                        dispatch(deleteFriend);
+                                        console.log(deleteFriend);
                                     }
                                     send_data();
                                 }}

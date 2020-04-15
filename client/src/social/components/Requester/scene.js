@@ -30,10 +30,10 @@ const Requester = (prop) => {
                 {requesters.map((user) => {
                     return (
                         <li key = { user._id }>
-                            { user.firstName } { user.lastName }
+                            { user.user.firstName } { user.user.lastName }
                             <br/>
                             <img 
-                                src = { user.avatar } 
+                                src = { user.user.avatar } 
                                 className = { className } 
                                 alt = ''
                             />
@@ -42,8 +42,9 @@ const Requester = (prop) => {
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {
-                                        const requesters = await cancel_user(user._id);
+                                        const requesters = await cancel_user(user.user._id);
                                         dispatch(requesters); 
+                                    
                                     }
                                     send_data();
                                 }}

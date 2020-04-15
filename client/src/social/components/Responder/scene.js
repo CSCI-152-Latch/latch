@@ -30,10 +30,10 @@ const Responder = (prop) => {
                 {responders.map((user) => {
                     return (
                         <li key = {user._id}>
-                            {user.firstName} {user.lastName}
+                            {user.user.firstName} {user.user.lastName}
                             <br/>
                             <img 
-                                src = {user.avatar} 
+                                src = {user.user.avatar} 
                                 className = {className}
                                 alt = ''
                             />
@@ -42,9 +42,9 @@ const Responder = (prop) => {
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {
-                                        const users = await accept_user(user._id);
-                                        dispatch(users)
-                                        console.log(users);
+                                        const acceptUser = await accept_user(user.user._id);
+                                        dispatch(acceptUser)
+                                        console.log(acceptUser);
                                     }
                                     send_data();
                                 }}
@@ -55,7 +55,7 @@ const Responder = (prop) => {
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {
-                                        const responders = await decline_user(user._id);
+                                        const responders = await decline_user(user.user._id);
                                         dispatch(responders);
                                         console.log(responders);
                                     }

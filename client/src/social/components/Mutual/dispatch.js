@@ -12,7 +12,7 @@ export const get_mutuals = async () => {
                 'Content-Type': 'application/json'
             }
         });
-
+    
         return {
             type: Type.GET_MUTUALS,
             payload: res.data
