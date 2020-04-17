@@ -25,7 +25,7 @@ const Login = ({ login, isAuthenticated }) => {
   //Rediret if logged in
 
   if (isAuthenticated) {
-    return <Redirect to="/social" />; //this will send user to dashboard upon login in but change for later.
+    return <Redirect to="/communityboard" />; //this will send user to dashboard upon login in but change for later.
   }
 
   return (

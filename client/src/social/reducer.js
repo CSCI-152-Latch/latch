@@ -21,7 +21,7 @@ const initialState = {
 export default (state = initialState, action) => {
     const { type, payload } = action;
 
-    switch(type) {
+    switch (type) {
         case mutual_type.GET_MUTUALS: {
             return {
                 ...state,

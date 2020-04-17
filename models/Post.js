@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
 
-const PostSchema = new Schema({
+const PostSchema = mongoose.Schema({
     user: {
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: "users"
     },
     text: {
@@ -17,14 +16,14 @@ const PostSchema = new Schema({
         },
         users: [{
             user: {
-                type: Schema.Types.ObjectId,
+                type: String,
                 ref: "users"
             }
         }]
     },
     comments: [{
         user: {
-            type: Schema.Types.ObjectId,
+            type: String,
             ref: "users"
         },
         text: {
