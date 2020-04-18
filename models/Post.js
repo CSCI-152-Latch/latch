@@ -22,10 +22,6 @@ const PostSchema = mongoose.Schema({
         }]
     },
     comments: [{
-        user: {
-            type: String,
-            ref: "users"
-        },
         text: {
             type: String,
             required: true

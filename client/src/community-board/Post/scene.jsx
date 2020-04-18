@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Socket from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_post, create_post, new_post } from './redux/dispatch';
+import { get_post, create_post, new_post, send_comment } from './redux/dispatch';
+const socket = Socket.connect('http://localhost:3000');
 
 const Post = () => {
     const dispatch = useDispatch();
@@ -19,7 +21,14 @@ const Post = () => {
     
     useEffect(() => {
         initFetch();
+        socket.emit('CONNECT_COMMUNITY_BOARD', 'room');
     }, [initFetch]);
+
+    useEffect(() => {
+        socket.on('RECIEVE_COMMUNITY_BOARD', (data) => {
+            dispatch(data);
+        })
+    }, []);
 
     const view_post = () => {
         if (isCreatePost) {
@@ -41,8 +50,11 @@ const Post = () => {
                                     text: text
                                 };
                                 const [newPost, status] = await new_post(data, !isCreatePost);
-                                dispatch(newPost);
+                                const newDispatch = await get_post();
+                                // dispatch(newPost);
                                 dispatch(status);
+                                dispatch(newDispatch);
+                                socket.emit('UPDATE_COMMUNITY_BOARD', newDispatch);
                                 set_text('');
                             }
                             send_data();
@@ -91,34 +103,46 @@ const Post = () => {
                             {post.text}
                         </h1>
                         {/* The like */}
-                        like: {post.likes.count} <br/>
+                        <input
+                            type = 'button'
+                            value = 'Like'
+                        />
 
                         <div>
                             comments: 
                             {/* Inputing a comment */}
-                            <input
+                            <input key = {post._id}
                                 type = 'text'
                                 onChange = {(e) => {
                                     const currComment = e.target.value;
                                     set_comment(currComment);
                                 }}
-                                value = {comment}
                             />
                             {/* Send a comment */}
-                            <button
+                            <input
+                                type = 'button'
+                                value = 'Send Comment'
                                 onClick = {() => {
-                                    
+                                    const send_data = async () => {
+                                        const data = {
+                                            postID: post._id,
+                                            text: comment
+                                        }
+                                        const newComment = await send_comment(data);
+                                        dispatch(newComment);
+                                        const newDispatch = await get_post();
+                                    socket.emit('UPDATE_COMMUNITY_BOARD', newDispatch);
+                                    }
+                                    send_data();
                                 }}
-                            >
-                                Send Comment
-                            </button>
+                            />
                             <br/>
 
                             {/* Display Comments */}
                             {post.comments.map((comment, index) => {
                                 return (
                                     <div key = {index}>
-                                        {comment.user.firstName} {comment.user.lastName} <br/>
+                                        {comment._id.firstName} {comment._id.lastName} <br/>
                                         {comment.text} <br/>
                                         {comment.date}
                                     </div>

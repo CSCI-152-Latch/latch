@@ -19,7 +19,7 @@ router.get('/posts', auth, async (_, res) => {
                                         model: 'users'
                                     },
                                     {
-                                        path: 'comments.user',
+                                        path: 'comments._id',
                                         model: 'users'
                                     }
                                 ]); 
@@ -86,13 +86,14 @@ router.post(
         }
 
         try {
-            const { text, postID, commenterID } = req.body;
-            const posts = await Post.findByIdAndUpdate(
+            const userID = req.user.id;
+            const { text, postID } = req.body;
+            await Post.findByIdAndUpdate(
                 postID,
                 {
-                    '$addToSet': {
+                    '$push': {
                         'comments': {
-                            'user': commenterID,
+                            '_id': userID,
                             'text': text
                         }
                     }
@@ -101,11 +102,25 @@ router.post(
                     'new': true
                 }
             ).populate({
-                path: 'comments.user',
+                path: 'comments._id',
                 select: 'firstName lastName avatar _id',
                 model: 'users'
             });
 
+            // res.json(posts);
+
+            const posts = await Post.find()
+                                .sort({ date: -1 })
+                                .populate([
+                                    {
+                                        path: 'user',
+                                        model: 'users'
+                                    },
+                                    {
+                                        path: 'comments._id',
+                                        model: 'users'
+                                    }
+                                ]); 
             res.json(posts);
         } 
         catch (err) {

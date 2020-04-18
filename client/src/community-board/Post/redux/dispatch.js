@@ -69,3 +69,29 @@ export const new_post = async (data, isCreatePost) => {
         }
     }
 }
+
+export const send_comment = async (data) => {
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/posts/addcomment',
+            headers: {
+                'x-auth-token': `${sessionStorage.token}`,
+                'Content-Type': 'application/json'
+            },
+            data
+        });
+
+        return {
+            type: Type.GET_POST,
+            payload: res.data
+        }
+
+    }
+    catch (err) {
+        return {
+            type: Type.ERROR,
+            payload: err
+        }
+    }
+}

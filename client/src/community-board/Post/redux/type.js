@@ -4,6 +4,7 @@ const type = {
     NEW_POST: 'NEW_POST',
     CANCEL_POST: 'CANCEL_POST',
     FINISH_POST: 'FINISH_POST',
+    ADD_COMMENT: 'ADD_COMMENT',
     ERROR: 'ERROR'
 }
 
