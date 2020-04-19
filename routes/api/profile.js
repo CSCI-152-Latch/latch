@@ -105,7 +105,7 @@ router.post(
       check("status", "status is required")
         .not()
         .isEmpty(),
-        check("fields", "field is required")
+      check("fields", "field is required")
         .not()
         .isEmpty()
     ]
@@ -115,7 +115,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { bio, status, facebook, twitter, linkedin, fields } = req.body;
+    const { bio, status, facebook, twitter, linkedin, fields, hobbies } = req.body;
 
     //build profile object
     const profileFields = {};
@@ -126,9 +126,12 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     //if (githubusername) profileFields.githubusername = githubusername;
-      if (fields) {
-        profileFields.fields = fields.split(",").map(field => field.trim());
-      }
+    if (fields) {
+      profileFields.fields = fields.split(",").map(field => field.trim());
+    }
+    if (hobbies) {
+      profileFields.hobbies = hobbies.split(",").map(hobby => hobby.trim());
+    }
 
     //build social object
     profileFields.social = {};
@@ -156,7 +159,6 @@ router.post(
       profile = new Profile(profileFields);
       await profile.save();
       res.json(profile);
-
     } catch (err) {
       console.error(err.message);
       res.status(500).send("server error");
@@ -173,8 +175,9 @@ router.get("/", async (req, res) => {
       "firstName",
       "lastName",
       "email",
+      "nickName",
       "avatar"
-    ]); 
+    ]);
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
@@ -189,7 +192,7 @@ router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id
-    }).populate("user", ["firstName", "lastName", "email", "avatar"]); //ep18
+    }).populate("user", ["firstName", "lastName", "email","nickName", "avatar"]); 
 
     if (!profile) return res.status(400).json({ msg: "Profile not found" });
 
@@ -197,7 +200,8 @@ router.get("/user/:user_id", async (req, res) => {
   } catch (err) {
     console.error(err.message);
 
-    if (err.kind == "ObjectId") {//"objectID is a kind of error so we are checking if the object id is messed up"
+    if (err.kind == "ObjectId") {
+      //"objectID is a kind of error so we are checking if the object id is messed up"
       return res.status(400).json({ msg: "Profile not found" });
     }
 
@@ -211,8 +215,8 @@ router.get("/user/:user_id", async (req, res) => {
 router.delete("/", auth, async (req, res) => {
   try {
     //@to do - remove users posts
-    //possibly might do this
-    
+    //possibly might do this probably not ?
+    //await Post.deleteMany({user: req.user.id})///make sure to include post model up top.
     //remove profile
     await Profile.findOneAndRemove({ user: req.user.id });
     //remove user
@@ -257,7 +261,7 @@ router.put(
       from,
       to,
       current,
-      deescription
+      description
     } = req.body;
 
     const newExp = {
@@ -267,7 +271,7 @@ router.put(
       from,
       to,
       current,
-      deescription
+      description
     };
 
     try {
@@ -341,7 +345,7 @@ router.put(
       from,
       to,
       current,
-      deescription
+      description
     } = req.body;
 
     const newEdu = {
@@ -351,7 +355,7 @@ router.put(
       from,
       to,
       current,
-      deescription
+      description
     };
 
     try {

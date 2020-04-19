@@ -9,6 +9,15 @@ import Setting from './setting/scene';
 import Social from './social/scene';
 import Dashboard from "./GlobalComponents/dashboard/Dashboard";
 import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
+import EditProfile from "./GlobalComponents/profile-forms/EditProfile";
+import AddExperience from "./GlobalComponents/profile-forms/AddExperience";
+import AddEducation from "./GlobalComponents/profile-forms/AddEducation";
+import Profiles from "./GlobalComponents/p-forms/Profiles";
+import Profile from "./GlobalComponents/p-form/Profile";
+//route to add hobbies
+//route to add job postings
+//route to add coupanies not private route
+//route to upload files.
 import PrivateRoute from "./GlobalComponents/routing/PrivateRoute";
 import CommmunityBoard from './community-board/scene';
 
@@ -39,6 +48,8 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/profiles" component={Profiles} />
+              <Route exact path= "/profile/:id" component={Profile} />
               <Route exact path='/setting' component={Setting} />
               <Route exact path='/social' component={Social} />
               <Route exact path='/communityboard' component={CommmunityBoard} />
@@ -47,6 +58,21 @@ const App = () => {
                 exact
                 path="/create-profile"
                 component={CreateProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/edit-profile"
+                component={EditProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/add-experience"
+                component={AddExperience}
+              />
+              <PrivateRoute
+                exact
+                path="/add-education"
+                component={AddEducation}
               />
             </Switch>
           </section>

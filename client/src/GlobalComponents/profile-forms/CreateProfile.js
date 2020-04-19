@@ -16,10 +16,11 @@ const CreateProfile = ({
     twitter: "",
     facebook: "",
     linkedin: "",
-    fields: ""
+    fields: "",
+    hobbies: ""
   });
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
-  const { status, bio, twitter, facebook, linkedin, fields } = formData;
+  const { status, bio, twitter, facebook, linkedin, fields, hobbies } = formData;
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = e => {
@@ -64,6 +65,18 @@ const CreateProfile = ({
             placeholder="* Fields"
             name="fields"
             value={fields}
+            onChange={e => onChange(e)}
+          />
+          <small className="form-text">
+            Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
+          </small>
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="* Hobbies"
+            name="hobbies"
+            value={hobbies}
             onChange={e => onChange(e)}
           />
           <small className="form-text">
