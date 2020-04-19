@@ -6,7 +6,7 @@ const ProfileAbout = ({
     bio,
     fields,
     hobbies,
-    user: { firstName,lastName }
+    _id: { firstName,lastName }
   }
 }) => (
   <div className='profile-about bg-light p-2'>
