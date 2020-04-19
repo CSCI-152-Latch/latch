@@ -5,7 +5,7 @@ const ProfileTop = ({
   profile: {
     status,
     social,
-    user: { firstName,lastName, avatar, nickName }
+    _id: { firstName,lastName, avatar, nickName }
   }
 }) => {
   return (

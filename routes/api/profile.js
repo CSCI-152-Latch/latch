@@ -55,6 +55,7 @@ router.get(
             const getProfile = await Profile.findById(req.user.id).populate(
                 '_id', ['firstName', 'lastName', 'email', 'avatar']);
             
+                // _id
             res.json(getProfile);
         }
         catch (err) {
@@ -147,7 +148,7 @@ router.post(
       if (profile) {
         //update
         profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
+          { _id: req.user.id },
           { $set: profileFields },
           { new: true }
         );
@@ -171,7 +172,7 @@ router.post(
 // @access    Public
 router.get("/", async (req, res) => {
   try {
-    const profiles = await Profile.find().populate("user", [
+    const profiles = await Profile.find().populate("_id", [
       "firstName",
       "lastName",
       "email",
@@ -191,8 +192,8 @@ router.get("/", async (req, res) => {
 router.get("/user/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id
-    }).populate("user", ["firstName", "lastName", "email","nickName", "avatar"]); 
+      _id: req.params.user_id
+    }).populate("_id", ["firstName", "lastName", "email","nickName", "avatar"]); 
 
     if (!profile) return res.status(400).json({ msg: "Profile not found" });
 
@@ -218,7 +219,7 @@ router.delete("/", auth, async (req, res) => {
     //possibly might do this probably not ?
     //await Post.deleteMany({user: req.user.id})///make sure to include post model up top.
     //remove profile
-    await Profile.findOneAndRemove({ user: req.user.id });
+    await Profile.findOneAndRemove({ _id: req.user.id });
     //remove user
     await User.findOneAndRemove({ _id: req.user.id });
 
@@ -275,7 +276,7 @@ router.put(
     };
 
     try {
-      const profile = await Profile.findOne({ user: req.user.id });
+      const profile = await Profile.findOne({ _id: req.user.id });
 
       profile.experience.unshift(newExp);
 
@@ -293,7 +294,7 @@ router.put(
 // @access    Private
 router.delete("/experience/:exp_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const profile = await Profile.findOne({ _id: req.user.id });
 
     //get the remove index
     const removeIndex = profile.experience
@@ -359,7 +360,7 @@ router.put(
     };
 
     try {
-      const profile = await Profile.findOne({ user: req.user.id });
+      const profile = await Profile.findOne({ _id: req.user.id });
 
       profile.education.unshift(newEdu);
 
@@ -377,7 +378,7 @@ router.put(
 // @access    Private
 router.delete("/education/:edu_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const profile = await Profile.findOne({ _id: req.user.id });
 
     //get the remove index
     const removeIndex = profile.education
