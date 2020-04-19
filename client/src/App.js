@@ -12,6 +12,8 @@ import AddExperience from "./GlobalComponents/profile-forms/AddExperience";
 import AddEducation from "./GlobalComponents/profile-forms/AddEducation";
 import Profiles from "./GlobalComponents/p-forms/Profiles";
 import Profile from "./GlobalComponents/p-form/Profile";
+//import Documents from './GlobalComponents/document/documentLayout'
+//import Document from './GlobalComponents/document/documentItem'
 //route to add hobbies
 //route to add job postings
 //route to add coupanies not private route
