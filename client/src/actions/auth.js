@@ -11,96 +11,113 @@ import {
   CLEAR_PROFILE
 } from "./types";
 import setAuthToken from "../utils/setAuthToken";
+
 //Load User
 export const loadUser = () => async dispatch => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
-
-  try {
-    const res = await axios.get("/api/auth");
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
-    });
-  } catch (err) {
-    dispatch({
-      type: AUTH_ERROR
-    });
-  }
+    if (sessionStorage.token) {
+        setAuthToken(sessionStorage.token);
+    }
+    try {
+        const res = await axios.request({
+            method: 'GET',
+            url: '/api/users/me',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        dispatch({
+            type: USER_LOADED,
+            payload: res.data
+        });
+    } 
+    catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        });
+    }
 };
 
 //Register User
-export const register = ({
-  firstName,
-  lastName,
-  email,
-  nickName,
-  password
-}) => async dispatch => {
+export const register = (
+    {
+        firstName,
+        lastName,
+        email,
+        nickName,
+        password
+    }
+) => async dispatch => {
   const config = {
-    headers: {
-      "Content-Type": "application/json"
-    }
+        headers: {
+            "Content-Type": "application/json"
+        }
   };
-  const body = JSON.stringify({
-    firstName,
-    lastName,
-    email,
-    nickName,
-    password
-  });
-  try {
-    const res = await axios.post("/api/users", body, config);
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data
-    });
-    dispatch(loadUser()); ///here
-  } catch (err) {
-    const errors = err.response.data.errors;
-    console.log(errors);
-    if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+  const body = JSON.stringify(
+      {
+        firstName,
+        lastName,
+        email,
+        nickName,
+        password
+        }
+    );
+    try {
+        const res = await axios.post("/api/auth/register", body, config);
+
+        dispatch({
+            type: REGISTER_SUCCESS,
+            payload: res.data
+        });
+        dispatch(loadUser()); ///here
+    } 
+    catch (err) {
+        const errors = err.response.data.errors;
+
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+        }
+
+        dispatch({
+            type: REGISTER_FAIL
+        });
     }
-    dispatch({
-      type: REGISTER_FAIL
-    });
-  }
 };
 
 //Login user
 export const login = (email, password) => async dispatch => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
-  const body = JSON.stringify({
-    email,
-    password
-  });
-  try {
-    const res = await axios.post("/api/auth", body, config);
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data
+    const config = {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    };
+    const body = JSON.stringify({
+        email,
+        password
     });
-    dispatch(loadUser()); ///here
-  } catch (err) {
-    const errors = err.response.data.errors;
-    console.log(errors);
-    if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+
+    try {
+        const res = await axios.post("/api/auth/login", body, config);
+
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: res.data
+        });
+        dispatch(loadUser()); ///here
+    } 
+    catch (err) {
+        const errors = err.response.data.errors;
+        
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+        }
+
+        dispatch({
+            type: LOGIN_FAIL
+        });
     }
-    dispatch({
-      type: LOGIN_FAIL
-    });
-  }
 };
 
 ///logout / clear profile
-
 export const logout = () => dispatch => {
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });

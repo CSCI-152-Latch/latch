@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 
 const FriendSchema = mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+    _id: {
+        type: mongoose.Schema.Types.ObjectId
     },
     friends: {
-        type: Array
+        type: [Object]
     },
-    requesting: {
-        type: Array
+    requesters: {
+        type: [Object]
     },
-    spending: {
-        type: Array
+    responders: {
+        type: [Object]
     }
 });
 

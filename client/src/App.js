@@ -5,6 +5,8 @@ import Landing from "./GlobalComponents/layout/Landing";
 import Login from "./GlobalComponents/auth/Login";
 import Register from "./GlobalComponents/auth/Register";
 import Alert from "./GlobalComponents/layout/Alert";
+import Setting from './setting/scene';
+import Social from './social/scene';
 import Dashboard from "./GlobalComponents/dashboard/Dashboard";
 import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
 import EditProfile from "./GlobalComponents/profile-forms/EditProfile";
@@ -17,6 +19,8 @@ import Profile from "./GlobalComponents/p-form/Profile";
 //route to add coupanies not private route
 //route to upload files.
 import PrivateRoute from "./GlobalComponents/routing/PrivateRoute";
+import CommmunityBoard from './community-board/scene';
+
 //redux stuff
 import { Provider } from "react-redux";
 import store from "./store";
@@ -46,6 +50,9 @@ const App = () => {
               <Route exact path="/login" component={Login} />
               <Route exact path="/profiles" component={Profiles} />
               <Route exact path= "/profile/:id" component={Profile} />
+              <Route exact path='/setting' component={Setting} />
+              <Route exact path='/social' component={Social} />
+              <Route exact path='/communityboard' component={CommmunityBoard} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact

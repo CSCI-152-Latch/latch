@@ -2,90 +2,157 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator/check");
 const auth = require("../../middleware/auth");
-
 const Post = require("../../models/Post");
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
-
-// @route    POST api/posts
-// @desc     Create a post
-// @access   Private
-router.post(
-  "/",
-  [
-    auth,
-    [
-      check("text", "Text is required")
-        .not()
-        .isEmpty()
-    ]
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const user = await User.findById(req.user.id).select("-password");
-
-      const newPost = new Post({
-        text: req.body.text,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        avatar: user.avatar,
-        user: req.user.id
-      });
-
-      const post = await newPost.save();
-
-      res.json(post);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
-    }
-  }
-);
 
 // @route    get api/posts
 // @desc     get all posts
 // @access   Private
+router.get('/posts', auth, async (_, res) => {
+    try {
 
-router.get("/", auth, async (req, res) => {
-  try {
-    const posts = await Post.find().sort({ date: -1 });//-1 brings most recent first
-    res.json(posts);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+        // -1 brings most recent first
+        const posts = await Post.find()
+                                .sort({ date: -1 })
+                                .populate([
+                                    {
+                                        path: 'user',
+                                        model: 'users'
+                                    },
+                                    {
+                                        path: 'comments._id',
+                                        model: 'users'
+                                    }
+                                ]); 
+        res.json(posts);
+    } 
+    catch (err) {
+        res.status(500).send('Server Error');
+    }
 });
+  
+// @route    POST api/posts
+// @desc     Create a post
+// @access   Private
+router.post(
+    "/create",
+    [
+        auth,
+        [
+            check("text", "Text is required")
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
+            const userID = req.user.id;
+            const { text } = req.body;
+            const newPost = await Post.create(
+                {
+                    user: userID,
+                    text: text
+                }
+            );
+            res.json(newPost);
+        } 
+        catch (err) {
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
+// @route    POST api/posts/comment/:id
+// @desc     Comment on a post
+// @access   Private
+router.post(
+    "/addcomment",
+    [
+        auth,
+        [
+            check("text", "Text is required")
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        try {
+            const userID = req.user.id;
+            const { text, postID } = req.body;
+            await Post.findByIdAndUpdate(
+                postID,
+                {
+                    '$push': {
+                        'comments': {
+                            '_id': userID,
+                            'text': text
+                        }
+                    }
+                },
+                {
+                    'new': true
+                }
+            ).populate({
+                path: 'comments._id',
+                select: 'firstName lastName avatar _id',
+                model: 'users'
+            });
+
+            // res.json(posts);
+
+            const posts = await Post.find()
+                                .sort({ date: -1 })
+                                .populate([
+                                    {
+                                        path: 'user',
+                                        model: 'users'
+                                    },
+                                    {
+                                        path: 'comments._id',
+                                        model: 'users'
+                                    }
+                                ]); 
+            res.json(posts);
+        } 
+        catch (err) {
+            res.status(500).send('Server Error');
+        }
+    }
+);
 
 // @route    get api/posts/:id
 // @desc     GET post by ID
 // @access   Private
-
 router.get("/:id", auth, async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ msg: "post not found" });
-    }
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+        return res.status(404).json({ msg: "post not found" });
+        }
 
-    res.json(post);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === "ObjectId") {///object id is a property that err has.
-      return res.status(404).json({ msg: "post not found" });
+        res.json(post);
+    } 
+    catch (err) {
+        console.error(err.message);
+        if (err.kind === "ObjectId") {///object id is a property that err has.
+            return res.status(404).json({ msg: "post not found" });
+        }
+        res.status(500).send("Server Error");
     }
-    res.status(500).send("Server Error");
-  }
 });
 
 // @route    DELETE api/posts/:id
 // @desc     Delete a post
 // @access   Private
-
 router.delete("/:id", auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -165,49 +232,6 @@ router.put("/unlike/:id", auth, async (req, res) => {
     res.status(500).send("sever error");
   }
 });
-
-// @route    POST api/posts/comment/:id
-// @desc     Comment on a post
-// @access   Private
-router.post(
-  "/comment/:id",
-  [
-    auth,
-    [
-      check("text", "Text is required")
-        .not()
-        .isEmpty()
-    ]
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    try {
-      const user = await User.findById(req.user.id).select("-password");
-
-      const post = await Post.findById(req.params.id);
-      const newComment = {
-        text: req.body.text,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        avatar: user.avatar,
-        user: req.user.id
-      };
-
-      post.comments.unshift(newComment);
-
-      await post.save();
-
-      res.json(post.comments);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
-    }
-  }
-);
 
 // @route    DELETE api/posts/comment/:id/:comment_id
 // @desc     Delete comment
