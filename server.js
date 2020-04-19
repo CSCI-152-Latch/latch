@@ -11,18 +11,25 @@ const io = socketIO(server);
 io.on('connect', (socket) => {
     socket.on('CONNECT', (data) => {
         socket.join(data);  // Creating with id of the ChatID
-    })
-
+    });
     socket.on('SEND_MESSAGE', (data) => {
         const { newDispatch, chatID } = data;
         socket.to(chatID).emit('RECIEVE_MESSAGE', newDispatch);
-    })
+    });
 
-    socket.on('SEND_FRIEND_REQUEST', (data) => {
-        const { newDispatch, rooom } = data;
-        socket.join(data);
-        socket.to(rooom).emit('')
+    socket.on('CONNECT_COMMUNITY_BOARD', (_) => {
+        socket.join('room');
     })
+    socket.on('UPDATE_COMMUNITY_BOARD', (data) => {
+        socket.to('room').emit('RECIEVE_COMMUNITY_BOARD', data);
+    });
+
+
+    // socket.on('SEND_FRIEND_REQUEST', (data) => {
+    //     const { newDispatch, rooom } = data;
+    //     socket.join(data);
+    //     socket.to(rooom).emit('')
+    // })
 
     socket.on('disconnect', () => {
         console.log(`Disconnect: ` + socket.id);

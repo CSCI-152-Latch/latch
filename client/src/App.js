@@ -10,6 +10,7 @@ import Social from './social/scene';
 import Dashboard from "./GlobalComponents/dashboard/Dashboard";
 import CreateProfile from "./GlobalComponents/profile-forms/CreateProfile";
 import PrivateRoute from "./GlobalComponents/routing/PrivateRoute";
+import CommmunityBoard from './community-board/scene';
 
 //redux stuff
 import { Provider } from "react-redux";
@@ -40,6 +41,7 @@ const App = () => {
               <Route exact path="/login" component={Login} />
               <Route exact path='/setting' component={Setting} />
               <Route exact path='/social' component={Social} />
+              <Route exact path='/communityboard' component={CommmunityBoard} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact
