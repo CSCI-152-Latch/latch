@@ -14,6 +14,9 @@ import AddExperience from "./GlobalComponents/profile-forms/AddExperience";
 import AddEducation from "./GlobalComponents/profile-forms/AddEducation";
 import Profiles from "./GlobalComponents/p-forms/Profiles";
 import Profile from "./GlobalComponents/p-form/Profile";
+import Document from './GlobalComponents/document/Document';
+import AddDocument from './GlobalComponents/document/AddDocument';
+//import AddDocument from './GlobalComponents/document/'
 //route to add hobbies
 //route to add job postings
 //route to add coupanies not private route
@@ -53,6 +56,8 @@ const App = () => {
               <Route exact path='/setting' component={Setting} />
               <Route exact path='/social' component={Social} />
               <Route exact path='/communityboard' component={CommmunityBoard} />
+              <Route exact path='/documents' component={Document} />
+              <Route exact path='/add-documents' component={AddDocument}/>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
                 exact

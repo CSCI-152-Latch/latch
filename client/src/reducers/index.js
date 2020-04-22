@@ -5,6 +5,7 @@ import profile from "./profile";
 import setting from '../setting/redux/reducer';
 import social from '../social/reducer';
 import communityboard from '../community-board/reducer';
+import document from './document'
 
 export default combineReducers({
   alert,
@@ -12,5 +13,6 @@ export default combineReducers({
   profile,
   setting,
   social,
-  communityboard
+  communityboard,
+  document
 });
