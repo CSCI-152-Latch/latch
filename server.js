@@ -18,9 +18,11 @@ io.on('connect', (socket) => {
     });
 
     socket.on('CONNECT_COMMUNITY_BOARD', (_) => {
+        console.log(socket.id + ' from connect');
         socket.join('room');
     })
     socket.on('UPDATE_COMMUNITY_BOARD', (data) => {
+        console.log(socket.id + ' from update');
         socket.to('room').emit('RECIEVE_COMMUNITY_BOARD', data);
     });
 

@@ -58,6 +58,7 @@ router.post(
                     text: text
                 }
             );
+            // console.log(newPost);
             res.json(newPost);
         } 
         catch (err) {
