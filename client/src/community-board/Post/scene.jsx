@@ -77,7 +77,7 @@ const Post = () => {
                             className="btn btn-dark my-1" 
                             value='Cancel'
                             onClick={() => {
-                                set_text('Create a post');
+                                set_text('');
                             }}
                         />
                     </div>
@@ -121,12 +121,13 @@ const Post = () => {
                                         <div className="bg-primary p">
                                             <h5>Leave A Comment</h5>
                                         </div>
-                                        <form className="form my-1">
+                                        <div className="form my-1">
                                             <textarea
                                                 name="text"
                                                 cols="30"
                                                 rows="5"
                                                 placeholder="Comment on this post"
+                                                value={comment}
                                                 required
                                                 onChange={(e) => {
                                                     const currComment = e.target.value;
@@ -136,7 +137,7 @@ const Post = () => {
                                             <input 
                                                 type="submit" 
                                                 className="btn btn-dark my-1" 
-                                                value="Submit." 
+                                                value='Submit' 
                                                 onClick = {() => {
                                                     const send_data = async () => {
                                                             const data = {
@@ -147,11 +148,12 @@ const Post = () => {
                                                             dispatch(newComment);
                                                             const newDispatch = await get_post();
                                                             socket.emit('UPDATE_COMMUNITY_BOARD', newDispatch);
+                                                            set_comment('');
                                                     }
                                                     send_data();
                                                 }}
                                             />
-                                        </form>
+                                        </div>
                                     </div>
                                     {post.comments.map((comment, index) => {
                                         return (
