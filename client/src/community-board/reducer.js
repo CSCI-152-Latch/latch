@@ -2,7 +2,6 @@ import Type from './Post/redux/type';
 
 const initialState = {
     posts: [],
-    isCreatePost: false,
     error: null
 };
 
@@ -14,14 +13,6 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 posts: payload
-            }
-        }
-        case Type.CREATE_POST: 
-        case Type.CANCEL_POST:
-        case Type.FINISH_POST: {
-            return {
-                ...state,
-                isCreatePost: payload
             }
         }
         case Type.NEW_POST: {
