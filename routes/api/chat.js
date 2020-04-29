@@ -16,11 +16,11 @@ router.post(
     async (req, res) => {
         try {
 
-            const currReqester = { '_id': req.user.id };
-            const { users } = req.body
+            const currResponder = { '_id': req.user.id };
+            const user = req.body
             
             const newChat = await Chat.create(
-                { users: [currReqester, users] }
+                { users: [currResponder, user] }
             );
             res.json(newChat);
         }
@@ -118,6 +118,7 @@ router.get('/rooms', auth, async (req, res) => {
                 select: '-email -password -date -__v'
             }
         );
+        console.log(getChats);
         res.json(getChats);
     }
     catch (err) {  

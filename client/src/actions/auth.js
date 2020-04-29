@@ -69,6 +69,14 @@ export const register = (
             payload: res.data
         });
         dispatch(loadUser()); ///here
+        await axios.request({
+            method: 'POST',
+            url: 'api/social/create',
+            headers: {
+                'x-auth-token': `${sessionStorage.token}`,
+                'Content-Type': 'application/json'
+            }
+        });
     } 
     catch (err) {
         const errors = err.response.data.errors;

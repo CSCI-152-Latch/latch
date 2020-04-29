@@ -23,6 +23,21 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <i className="fas fa-user" /> <span>Profiles</span>
         </Link>
       </li>
+      <li>
+        <Link to="/social">
+          <i className="fas fa-user" /> <span>Social</span>
+        </Link>
+      </li>
+      <li>
+        <Link to="/setting">
+          <i className="fas fa-user" /> <span>Setting</span>
+        </Link>
+      </li>
+      <li>
+        <Link to="/communityboard">
+          <i className="fas fa-user" /> <span>Community Board</span>
+        </Link>
+      </li>
     </ul>
   );
 

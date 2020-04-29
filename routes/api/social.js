@@ -17,14 +17,10 @@ router.post(
     async (req, res) => {
         try {
             const userID = req.user.id;
-            const { friends, requesters, responders } = req.body;
 
             const newFriendList = await Friend.create(
                 {
-                    _id:        userID,
-                    friends:    friends,
-                    requesters: requesters,
-                    responders: responders
+                    _id: userID
                 }
             );
             res.json(newFriendList);
@@ -171,6 +167,7 @@ router.get(
                 path: 'responders.user',
                 model: 'users'
             });
+            
             res.json(getResponders);
         }
         catch (err) {
