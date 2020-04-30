@@ -12,6 +12,7 @@ const Profile = require("../../models/Profile");
 const User = require("../../models/User");
 const Documents = require("../../models/Document");
 
+
 // router.get("/", async (req, res) => {
 //   res.send("documents up and running");
 // });
@@ -47,12 +48,13 @@ router.post(
       return res.status(400).json({ msg: "No file uploaded" });
     }
     console.log(req.body, "req.body");
-    console.log(req.files, "req.filds");
+    console.log(req.files, "req.files");
     //notepad has the comment code jsut in case
     //const { title, publishDate, pageCount, cover, description  } = req.body;
     const { title, publishDate, pageCount, description } = req.body;
     const { cover } = req.files;
-
+    //const cover = req.files.[0];
+    console.log(cover,'cover field');
     try {
       //const user = await User.findById(req.user.id).select("-password");
       //const cover1 = JSON.parse(cover)
@@ -92,8 +94,8 @@ router.post(
 function saveCover(documentFields, coverEncoded) {
   console.log(coverEncoded, "from functions");
   if (coverEncoded == null) return;
-
-  const cover = coverEncoded; //JSON.parse(coverEncoded);
+//JSON.parse(coverEncoded);
+  const cover = coverEncoded; 
 
   if (cover != null && imageMimeTypes.includes(cover.mimetype)) {
     documentFields.coverImageBuffer = new Buffer.from(cover.data, "base64");

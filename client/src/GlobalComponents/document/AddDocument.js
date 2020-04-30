@@ -11,20 +11,20 @@ const AddDocument = ({ createDocument, history }) => {
     title: "",
     publishDate: "",
     pageCount: "",
-    cover: "",
+    ////////cover: "",
     description: "",
   });
- const [coVer,setCover] = useState('');
-  const { title, publishDate, pageCount, cover, description } = formData;
-  //const { title, publishDate, pageCount, description } = formData;
-  //const { cover } = coVer;
+  //const [coVer, setCover] = useState("");
+  const [coVer, setCover] = useState({cover:[]},[]);
+  //const { title, publishDate, pageCount, cover, description } = formData;
+  const { title, publishDate, pageCount, description } = formData;
+  const { cover } = coVer;
   const onChange = (e) => {
-
     setFormData({ ...formData, [e.target.name]: e.target.value });
     //setCover(e.target.files[0].name);
   };
   const onSetFile = (e) => {
-    setCover( e.target.files[0]);
+    setCover(e.target.files[0]);
   };
 
   return (
@@ -100,7 +100,8 @@ const AddDocument = ({ createDocument, history }) => {
             name="cover"
             //className="filepond"
             value={cover}
-            onChange={(e) => onSetFile(e)}
+            //onChange={(e) => onSetFile(e)}
+            onChange={onSetFile}
             height="150"
             width="100"
           />

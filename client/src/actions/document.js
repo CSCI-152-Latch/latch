@@ -38,7 +38,7 @@ export const createDocument = (
       },
     };
 
-    const res = await axios.post("/api/documents", formData,coVer, config);
+    const res = await axios.post("/api/documents", formData, coVer, config);
 
     dispatch({
       type: DOCUMENT_CREATED,
@@ -49,9 +49,9 @@ export const createDocument = (
       setAlert(edit ? "Document Updated" : "Document Created", "success")
     );
 
-    if (!edit) {
-      history.push("/documents"); //push updated to dashboard screen like a redirect
-    }
+    // if (!edit) {
+    //   history.push("/documents"); //push updated to dashboard screen like a redirect
+    // }
   } catch (err) {
     const errors = err.response.data.errors;
 
