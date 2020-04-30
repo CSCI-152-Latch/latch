@@ -61,7 +61,7 @@ router.get(
                     }
                 },
                 { firstName: 1, lastName: 1, avatar: 1 }
-            ).limit(4);
+            );
             res.json(getMutuals);
         }
         catch (err) {

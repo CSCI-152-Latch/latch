@@ -25,21 +25,7 @@ export const get_post = async () => {
     }
 }
 
-export const create_post = (isCreatePost) => {
-    if (isCreatePost) {
-        return {
-            type: Type.CREATE_POST,
-            payload: isCreatePost
-        }
-    }
-    else {
-        return {
-            type: Type.CANCEL_POST,
-            payload: isCreatePost
-        }
-    }
-}
-export const new_post = async (data, isCreatePost) => {
+export const new_post = async (data) => {
     try {
         const res = await axios.request({
             method: 'POST',
@@ -50,17 +36,10 @@ export const new_post = async (data, isCreatePost) => {
             },
             data
         })
-        return [
-            {
-                type: Type.NEW_POST,
-                payload: res.data
-            },
-            {
-                type: Type.FINISH_POST,
-                payload: isCreatePost
-            }
-
-        ]
+        return {
+            type: Type.NEW_POST,
+            payload: res.data
+        }
     }
     catch (err) {
         return {

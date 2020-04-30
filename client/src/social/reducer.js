@@ -37,26 +37,34 @@ export default (state = initialState, action) => {
         case mutual_type.ADD_USER:
         case requester_type.GET_REQUESTERS:
         case requester_type.CANCEL_USER: {
-            const { requesters } = payload; 
-            return {
-                ...state,
-                requesters: requesters
+            if (payload) {
+                const { requesters } = payload; 
+                return {
+                    ...state,
+                    requesters: requesters
+                }
             }
+            return;
         }
         case friend_type.GET_FRIENDS:
         case friend_type.DELETE_USER: {
-            const { friends } = payload;
-            return {
-                ...state,
-                friends: friends
+            if (payload) {
+                const { friends } = payload;
+                return {
+                    ...state,
+                    friends: friends
+                }
             }
+            return;
         }
         case responder_type.GET_RESPONDERS: 
         case responder_type.DECLINE_USER: {
-            const { responders } = payload;
-            return {
-                ...state,
-                responders: responders
+            if (payload) {
+                const { responders } = payload;
+                return {
+                    ...state,
+                    responders: responders
+                }
             }
         }
         case responder_type.ACCEPT_USER: {
@@ -68,12 +76,15 @@ export default (state = initialState, action) => {
             }
         } 
         case room_type.GET_MESSAGES: {
-            const { chatID, messages } = payload;
-            return {
-                ...state,
-                chatID: chatID,
-                messages: messages
+            if (payload) {
+                const { chatID, messages } = payload;
+                return {
+                    ...state,
+                    chatID: chatID,
+                    messages: messages
+                }
             }
+            return;
         }
         case message_type.ADD_MESSAGE: {
             const { messages } = payload;

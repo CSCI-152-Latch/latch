@@ -54,6 +54,29 @@ export const accept_user = async (id) => {
     }
 }
 
+export const create_chat = async (id) => {
+    try {
+        const res = await axios.request({
+            method: 'POST',
+            url: 'api/chat/create',
+            headers: {
+                'x-auth-token': `${sessionStorage.token}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                _id: id
+            }
+        })
+        return;
+    }
+    catch (err) {
+        return {
+            type: Type.ERROR,
+            payload: err
+        }
+    }
+}
+
 export const decline_user = async (id) => {
     try {
         const res = await axios.request({

@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_responders, accept_user, decline_user } from './dispatch';
+import { get_responders, accept_user, decline_user, create_chat } from './dispatch';
 
 const Responder = (prop) => {
     const { className } = prop;
@@ -43,8 +43,10 @@ const Responder = (prop) => {
                                 onClick = {() => {
                                     const send_data = async () => {
                                         const acceptUser = await accept_user(user.user._id);
-                                        dispatch(acceptUser)
-                                        console.log(acceptUser);
+                                        await create_chat(user.user._id);
+                                        const responders = await get_responders();
+                                        dispatch(responders);
+                                        dispatch(acceptUser);
                                     }
                                     send_data();
                                 }}

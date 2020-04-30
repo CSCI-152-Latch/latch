@@ -20,6 +20,7 @@ const Room = (prop) => {
 
     const rooms = useSelector((state) => state.social.rooms); 
     console.log('From Room');
+    console.log(rooms);
 
     return (
         <div>
