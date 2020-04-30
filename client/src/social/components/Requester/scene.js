@@ -38,7 +38,7 @@ const Requester = (prop) => {
                                 alt = ''
                             />
                             <br/>
-                            <button 
+                            <button className="button-size"
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {

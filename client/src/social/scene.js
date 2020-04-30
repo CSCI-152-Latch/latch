@@ -14,22 +14,22 @@ const Social = () => {
     return (
         <Fragment>
             <Mutual
-                className = 'profile-size'
+                className = 'round-img my-1'
             />
             <Requester
-                className = 'profile-size'
+                className = 'round-img my-1'
             />
             <Friend
-                className = 'profile-size'
+                className = 'round-img my-1'
             />
             <Responder
-                className = 'profile-size'
+                className = 'round-img my-1'
             />
             <Room
                 className = 'profile-size'
             />
             <Message
-                className = 'profile-size'
+                className = 'round-img my-1'
             />
         </Fragment>
     )

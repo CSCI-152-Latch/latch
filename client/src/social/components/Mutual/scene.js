@@ -22,7 +22,7 @@ const Mutual = (prop) => {
     console.log('From Mutual');
 
     return (
-        <div>
+        <div className='profile-top bg-primary p-2'>
             <h1>
                 Dummy Users
             </h1>
@@ -38,7 +38,7 @@ const Mutual = (prop) => {
                                 alt = ''
                             />
                             <br/>
-                            <button 
+                            <button className="button-size"
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {

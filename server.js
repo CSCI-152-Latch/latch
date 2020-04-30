@@ -2,11 +2,13 @@ const express = require("express");
 const socketIO = require('socket.io');
 const http = require('http')
 
+
 const connectDB = require("./config/db");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+const fileUpload = require('express-fileupload');
 
 io.on('connect', (socket) => {
     socket.on('CONNECT', (data) => {
@@ -46,12 +48,19 @@ connectDB();
 // Initialize middleware and allow us to get the data from request body 
 app.use(express.json({ extended:false }));
 
+//add more stuff to it
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+  }));
+app.use("/api/documents", require("./routes/api/documents"));
 
 //the routes we will be using
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/posts", require("./routes/api/posts"));
+app.use("/api/job", require("./routes/api/jobs"));
+
 app.use("/api/chat", require("./routes/api/chat"));
 app.use("/api/setting", require("./routes/api/setting"));
 app.use('/api/social', require('./routes/api/social'));

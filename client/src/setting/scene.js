@@ -27,31 +27,32 @@ const Setting = () => {
 
     return (
         <Fragment>
-            <div className='container profile-top bg-primary p-2'>
+            <h1 className="large text-primary">Update your credentials Here</h1>
+            <div className='form'>
                 <Field
                     field = 'firstName'
                     update_field = {Dispatch.update_field}
-                    className = 'large'
+                    className = 'form-group'
                 />
                 <Field
                     field = 'lastName'
                     update_field = {Dispatch.update_field}
-                    className = 'large'
+                    className = 'form-group'
                 />
                 <Field
                     field = 'email'
                     update_field = {Dispatch.update_field}
-                    className = 'large'
+                    className = 'form-group'
                 />
                 <Field
                     field = 'nickName'
                     update_field = {Dispatch.update_field}
-                    className = 'large'
+                    className = 'form-group'
                 />
                 <Field
                     field = 'date'
                     update_field = {Dispatch.update_field}
-                    className = 'large'
+                    className = 'form-group'
                 />
                 <Editable
                     className = 'button-size'
