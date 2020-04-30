@@ -39,6 +39,7 @@ const Friend = (prop) => {
                             />
                             <br/>
                             <button 
+                            className="button-size"
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {
