@@ -22,7 +22,7 @@ const Responder = (prop) => {
     console.log('From Responder');
 
     return (
-        <div>
+        <div className="profile-top bg-primary m">
             <h1>
                 Responder
             </h1>
@@ -39,6 +39,7 @@ const Responder = (prop) => {
                             />
                             <br/>
                             <button 
+                            className="button-size"
                                 type = 'button'
                                 onClick = {() => {
                                     const send_data = async () => {

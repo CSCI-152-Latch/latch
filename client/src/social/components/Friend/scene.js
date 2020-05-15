@@ -22,7 +22,7 @@ const Friend = (prop) => {
     console.log('From Friend');
 
     return (
-        <div>
+        <div className="profile-top bg-primary p-2">
             <h1>
                 Friend
             </h1>

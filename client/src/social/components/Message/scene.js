@@ -57,13 +57,14 @@ const Message = (prop) => {
             <input
                 type = 'text'
                 placeholder = 'Add Message'
+                className="form-group"
                 value = {message}
                 size = {30}
                 onChange = {(e) => {
                     set_message(e.target.value);
                 }}
             />
-            <button
+            <button className="button-size"
                 onClick = {(e) => {
                     const send_data = async () => {
                         e.preventDefault();

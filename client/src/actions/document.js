@@ -26,20 +26,20 @@ export const getDocuments = () => async (dispatch) => {
 // Create Document
 export const createDocument = (
   formData,
-  coVer,
-  history, //this saves pages like previous page and stuff
+  //coVer,
+  //history, //this saves pages like previous page and stuff
   edit = false
 ) => async (dispatch) => {
   try {
     const config = {
       headers: {
-        "Content-Type": "application/json",
+       
         'Content-Type': 'multipart/form-data'
       },
     };
-
-    const res = await axios.post("/api/documents", formData, coVer, config);
-
+ console.log("formData",formData);
+    const res = await axios.post("/api/documents", formData, config);
+ console.log('res',res.data);
     dispatch({
       type: DOCUMENT_CREATED,
       payload: res.data,
@@ -54,7 +54,7 @@ export const createDocument = (
     // }
   } catch (err) {
     const errors = err.response.data.errors;
-
+ console.log('errors',errors);
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }

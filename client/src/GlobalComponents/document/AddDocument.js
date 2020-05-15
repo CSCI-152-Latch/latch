@@ -8,25 +8,26 @@ import { createDocument } from "../../actions/document";
 
 const AddDocument = ({ createDocument, history }) => {
   const [formData, setFormData] = useState({
-    title: "",
-    publishDate: "",
-    pageCount: "",
-    ////////cover: "",
-    description: "",
+    title: "james",
+    publishDate: "02/00/00",
+    pageCount: 4,
+    cover: null,
+    description: "sdfgadfasdfasf",
   });
   //const [coVer, setCover] = useState("");
-  const [coVer, setCover] = useState({cover:[]},[]);
+  //const [coVer, setCover] = useState({cover:[]},[]);
   //const { title, publishDate, pageCount, cover, description } = formData;
-  const { title, publishDate, pageCount, description } = formData;
-  const { cover } = coVer;
+  const { title, publishDate, pageCount, description, cover } = formData;
+  //const { cover } = coVer;
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     //setCover(e.target.files[0].name);
   };
   const onSetFile = (e) => {
-    setCover(e.target.files[0]);
+    console.log(e.target.files[0]);
+    setFormData({ ...formData, cover: e.target.files[0] });
   };
-
+  console.log(formData);
   return (
     <Fragment>
       <h1 className="large text-primary">Add Document</h1>
@@ -38,8 +39,14 @@ const AddDocument = ({ createDocument, history }) => {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          createDocument(formData, coVer, history);
-          console.log(formData, coVer, "add doc");
+          const data = new FormData();
+
+          Object.entries(formData).forEach((item) => {
+            console.log("item", item);
+            data.append(item[0], item[1]);
+          });
+          createDocument(data);
+          //console.log(formData, coVer, "add doc");
         }}
       >
         <div className="form-group">
@@ -99,7 +106,7 @@ const AddDocument = ({ createDocument, history }) => {
             type="file"
             name="cover"
             //className="filepond"
-            value={cover}
+            value={null}
             //onChange={(e) => onSetFile(e)}
             onChange={onSetFile}
             height="150"
