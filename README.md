@@ -6,6 +6,3 @@ LATCH is a social Web platform aimed towards people who are in the pursuit or al
 ## The Purpose
 The purpose of LATCH is to create a platform in which people of all STEM careers can discuss about various topics and to create and seek opportunities for themselves. I want this to be a site where anyone no matter the experience whether they are an expert or a complete noob can log on and join a community that will help them further their goals. 
 
-## WireFrame
-WireFram will be linked in the tab pages to the right ->->->
-
